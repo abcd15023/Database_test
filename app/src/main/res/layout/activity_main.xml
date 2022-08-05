@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bb1"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/et1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="名称"
+                android:textColorHint="#D9D9D9"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/et11"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="规格"
+                android:textColorHint="#D9D9D9"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="插入"
+                android:theme="@style/BlueButtonStyle" />
+
+            <Button
+                android:id="@+id/btn11"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="清除"
+                android:theme="@style/BlueButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/et2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:hint="id"
+                android:textColorHint="#D9D9D9"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/et22"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:hint="名称"
+                android:textColorHint="#D9D9D9"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/et222"
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:hint="规格"
+                android:textColorHint="#D9D9D9"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="更新"
+                android:theme="@style/BlueButtonStyle" />
+
+            <Button
+                android:id="@+id/btn22"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="清除"
+                android:theme="@style/BlueButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="bottom">
+
+            <EditText
+                android:id="@+id/et3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="输入要删除的行id"
+                android:textColorHint="#D9D9D9"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="删除"
+            android:theme="@style/BlueButtonStyle" />
+
+        <Button
+            android:id="@+id/btn33"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="清除"
+            android:theme="@style/BlueButtonStyle" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="清除查询"
+            android:theme="@style/BlueButtonStyle" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_del_database"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="删表"
+            android:theme="@style/BlueButtonStyle"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/btn_read_database"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="重载数据库"
+            android:theme="@style/BlueButtonStyle" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/b6"
+        android:gravity="center">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ID"
+            android:textSize="18sp"
+            android:textColor="#fff"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="名称"
+            android:layout_marginLeft="20dp"
+            android:textSize="18sp"
+            android:textColor="#fff"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="规格"
+            android:layout_marginLeft="20dp"
+            android:textSize="18sp"
+            android:textColor="#fff"
+            android:gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <com.yanzhenjie.recyclerview.SwipeRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>
