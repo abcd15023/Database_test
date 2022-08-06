@@ -107,66 +107,66 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dbInsert();
-                dbSearch();
+                //dbInsert();
+                //dbSearch();
             }
         });
         btn_clear1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                et1.setText("");
-                et11.setText("");
-                dbSearch();
+                //et1.setText("");
+                //et11.setText("");
+                //dbSearch();
             }
         });
         btn_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dbUpdate();
-                dbSearch();
+                //dbUpdate();
+                //dbSearch();
             }
         });
         btn_clear2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                et2.setText("");
-                et22.setText("");
-                et222.setText("");
-                dbSearch();
+//                et2.setText("");
+//                et22.setText("");
+//                et222.setText("");
+//                dbSearch();
             }
         });
         btn_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dbDelSingle();
-                dbSearch();
+//                dbDelSingle();
+//                dbSearch();
             }
         });
         btn_clear3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                et3.setText("");
-                dbSearch();
+//                et3.setText("");
+//                dbSearch();
             }
         });
         btn_clearchaxun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDataList.clear();
-                mAdapter.notifyDataSetChanged(mDataList);
+//                mDataList.clear();
+//                mAdapter.notifyDataSetChanged(mDataList);
             }
         });
         btn_del_database.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deldb();
-                dbSearch();
+//                deldb();
+//                dbSearch();
             }
         });
         btn_read_database.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dbSearch();
+//                dbSearch();
             }
         });
     }
@@ -185,28 +185,32 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     //创建数据库映射的数据集合List
     protected List<nianhui_info> createDataList() {
         //创建游标对象
-        Cursor cursor = db.query("nianhui", new String[]{"id","name","size"}, null, null, null, null, null);
+        Cursor cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
         //利用游标遍历所有数据对象
         //为了显示全部，把所有对象连接起来，放到TextView中
-        String textview_data = "";
 
         mDataList = new ArrayList<>();
         while(cursor.moveToNext()){
+            int temp_id = cursor.getColumnIndex("id");
+            int temp_remark = cursor.getColumnIndex("remark");
             int temp_name = cursor.getColumnIndex("name");
             int temp_size= cursor.getColumnIndex("size");
-            int temp_id = cursor.getColumnIndex("id");
+            int temp_sizePlus = cursor.getColumnIndex("sizePlus");
+            int temp_sellingPrice = cursor.getColumnIndex("sellingPrice");
+            int temp_purchasingPrice = cursor.getColumnIndex("purchasingPrice");
+            int temp_time = cursor.getColumnIndex("time");
+            int temp_supplier = cursor.getColumnIndex("supplier");
 
             int id = cursor.getInt(temp_id);
             String name = cursor.getString(temp_name);
-//            if (name.equals("")) {
-//                name = "空";
-//            }
+            String remark = cursor.getString(temp_remark);
             String size = cursor.getString(temp_size);
-//            if (size.equals("")) {
-//                size = "空";
-//            }
-            textview_data = textview_data + "\n" + id +"       "+ name + "       "+size;
-            nianhui_info nh = new nianhui_info(id,name,size);
+            String sizePlus = cursor.getString(temp_sizePlus);
+            String sellingPrice = cursor.getString(temp_sellingPrice);
+            String purchasingPrice = cursor.getString(temp_purchasingPrice);
+            String supplier = cursor.getString(temp_supplier);
+            String time = cursor.getString(temp_time);
+            nianhui_info nh = new nianhui_info(id,remark,name,size,sizePlus,sellingPrice,purchasingPrice,time,supplier);
             mDataList.add(nh);
             Log.i("zun","mDataList最初打印"+mDataList.toString());
         }
@@ -243,9 +247,9 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         et22 = findViewById(R.id.et22);
         et222 = findViewById(R.id.et222);
         et3 = findViewById(R.id.et3);
-        text1 = findViewById(R.id.item1_text1);
-        text2 = findViewById(R.id.item1_text2);
-        text3 = findViewById(R.id.item1_text3);
+//        text1 = findViewById(R.id.item1_text1);
+//        text2 = findViewById(R.id.item1_text2);
+//        text3 = findViewById(R.id.item1_text3);
         btn_insert = findViewById(R.id.btn1);
         btn_clear1 = findViewById(R.id.btn11);
         btn_update = findViewById(R.id.btn2);
@@ -282,8 +286,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         Log.i("zun", "删除数据表");
         ContentValues values = new ContentValues();
         for (nianhui_info nhi : mDataList) {
+            values.put("remark", nhi.getRemark());
             values.put("name", nhi.getName());
             values.put("size", nhi.getSize());
+            values.put("sizePlus", nhi.getSizePlus());
+            values.put("sellingPrice", nhi.getSellingPrice());
+            values.put("purchasingPrice", nhi.getPurchasingPrice());
+            values.put("time", nhi.getTime());
+            values.put("supplier", nhi.getSupplier());
             db.insert("nianhui", null, values);
         }
     }
@@ -314,29 +324,32 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         Log.i("zun","dbSearch()");
         Log.i("zun","dbSearch2()");
         //创建游标对象
-        Cursor cursor = db.query("nianhui", new String[]{"id","name","size"}, null, null, null, null, null);
+        Cursor cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
         //利用游标遍历所有数据对象
         //为了显示全部，把所有对象连接起来，放到TextView中
         Log.i("zun","dbSearch3()");
-        String textview_data = "";
 
         mDataList2 = new ArrayList<>();
         while(cursor.moveToNext()){
+            int temp_id = cursor.getColumnIndex("id");
+            int temp_remark = cursor.getColumnIndex("remark");
             int temp_name = cursor.getColumnIndex("name");
             int temp_size= cursor.getColumnIndex("size");
-            int temp_id = cursor.getColumnIndex("id");
-
+            int temp_sizePlus = cursor.getColumnIndex("sizePlus");
+            int temp_sellingPrice = cursor.getColumnIndex("sellingPrice");
+            int temp_purchasingPrice = cursor.getColumnIndex("purchasingPrice");
+            int temp_time = cursor.getColumnIndex("time");
+            int temp_supplier = cursor.getColumnIndex("supplier");
             int id = cursor.getInt(temp_id);
             String name = cursor.getString(temp_name);
-//            if (name.equals("")) {
-//                name = "空";
-//            }
+            String remark = cursor.getString(temp_remark);
             String size = cursor.getString(temp_size);
-//            if (size.equals("")) {
-//                size = "空";
-//            }
-            textview_data = textview_data + "\n" + id +"       "+ name + "       "+size;
-            nianhui_info nh = new nianhui_info(id,name,size);
+            String sizePlus = cursor.getString(temp_sizePlus);
+            String sellingPrice = cursor.getString(temp_sellingPrice);
+            String purchasingPrice = cursor.getString(temp_purchasingPrice);
+            String supplier = cursor.getString(temp_supplier);
+            String time = cursor.getString(temp_time);
+            nianhui_info nh = new nianhui_info(id,remark,name,size,sizePlus,sellingPrice,purchasingPrice,time,supplier);
             mDataList2.add(nh);
         }
         mDataList = mDataList2;

@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
         et22 = findViewById(R.id.et22);
         et222 = findViewById(R.id.et222);
         et3 = findViewById(R.id.et3);
-        text1 = findViewById(R.id.item1_text1);
-        text2 = findViewById(R.id.item1_text2);
-        text3 = findViewById(R.id.item1_text3);
+//        text1 = findViewById(R.id.item1_text1);
+//        text2 = findViewById(R.id.item1_text2);
+//        text3 = findViewById(R.id.item1_text3);
         btn_insert = findViewById(R.id.btn1);
         btn_clear1 = findViewById(R.id.btn11);
         btn_update = findViewById(R.id.btn2);
@@ -184,8 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 size = "空";
             }
             textview_data = textview_data + "\n" + id +"       "+ name + "       "+size;
-            nianhui_info nh = new nianhui_info(id,name,size);
-            nianhuidata.add(nh);
+            //nianhui_info nh = new nianhui_info(id,name,size);
+            //nianhuidata.add(nh);
         }
         adapter = new MyAdapter(nianhuidata); //然后获取MyAdapter实例，将数据传入构造方法，
         recyclerView1.setAdapter(adapter); //最后ReyeclerView对象实现setAdaper方法传入MyAdatper实例。

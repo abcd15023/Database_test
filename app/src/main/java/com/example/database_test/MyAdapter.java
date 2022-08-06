@@ -22,9 +22,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //构造函数传入View参数，
         public ViewHolder(View view){
             super(view);
-            text1 = view.findViewById(R.id.item1_text1);
-            text2 = view.findViewById(R.id.item1_text2);
-            text3 = view.findViewById(R.id.item1_text3);
+//            text1 = view.findViewById(R.id.item1_text1);
+//            text2 = view.findViewById(R.id.item1_text2);
+//            text3 = view.findViewById(R.id.item1_text3);
         }
     }
     //MyAdapter构造函数，用于把要展示的数据源传进来，赋值给全局变量mdataList。
