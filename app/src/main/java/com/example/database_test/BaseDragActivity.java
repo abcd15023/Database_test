@@ -77,6 +77,9 @@ public abstract class BaseDragActivity extends BaseActivity {
             } else if (actionState == OnItemStateChangedListener.ACTION_STATE_IDLE) {
                 //mActionBar.setSubtitle("状态：手指松开");
 
+                delDragList(); //
+                DragChangeDb(); //拖动操作直接改变数据库
+
                 // 在手松开的时候还原背景。
                 ViewCompat.setBackground(viewHolder.itemView,
                     ContextCompat.getDrawable(BaseDragActivity.this, R.color.toumingse));

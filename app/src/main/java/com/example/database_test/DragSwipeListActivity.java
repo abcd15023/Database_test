@@ -75,7 +75,8 @@ public class DragSwipeListActivity extends BaseDragActivity {
                 mAdapter.notifyItemMoved(fromPosition, toPosition);
                 Log.i("zun","OnItemMoveListener");
 
-                DragChangeDb();//拖动操作直接改变数据库
+
+                //DragChangeDb();//拖动操作直接改变数据库
 
                 return true;// 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
             }

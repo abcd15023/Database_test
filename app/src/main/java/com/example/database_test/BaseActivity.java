@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import com.yanzhenjie.recyclerview.widget.DefaultItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -68,7 +71,23 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     TextView text1,text2,text3;
     String gettext1,gettext11,gettext2,gettext22,gettext222,gettext3;
     SQLiteDatabase db;
+    SearchView searchView_name,searchView_size;
     RecyclerView recyclerView1;
+    String tt = "";
+    String n;
+    String [] arr2={};
+    int q = 0;
+    String arri;
+    String and="";
+    String andd,andd2;
+    String and1=" ",and2=" ";
+    String andname = "";
+    String andsize = "";
+    int isName,isSize;
+    String sql;
+    String tempTextName,tempTextSize;
+    int firstSearch = 0;
+    String firstname,firstsize;
     //ArrayList<nianhui_info> nianhuidata;
     //MyAdapter adapter;
 
@@ -87,6 +106,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 //            mActionBar.setDisplayHomeAsUpEnabled(true);
 //        }
         initView();
+        initSearchView();
         initDatabase();
         mLayoutManager = createLayoutManager();
         mItemDecoration = createItemDecoration();
@@ -169,6 +189,134 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 //                dbSearch();
             }
         });
+        searchView_size.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                tempTextSize = newText;
+
+                isSize = 2;
+                if(!newText.trim().isEmpty()){  //如果字符串去掉前后空格不为空
+
+                    String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
+                    Log.i("zunn","字符串最后："+qqq+",,");
+                    dbSearch2(newText,isSize);
+                }else{
+
+                    dbSearch2(tempTextName,1); //如果规格删减为空则重新调用名称搜索
+                    //mDataList.clear();
+                    mAdapter.notifyDataSetChanged(mDataList);
+                    //andsize = "";
+                }
+
+                return true;
+            }
+        });
+        searchView_name.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override   //提交按钮监听事件
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(BaseActivity.this,"提交监听",Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override   //搜索框内容改变监听
+            public boolean onQueryTextChange(String newText) {
+                tempTextName = newText;
+                //mDataList.clear();
+//                if(!newText.trim().isEmpty()) {
+//                    if (q != 0) {
+//                        mDataList = getNewData(newText);
+//                        mAdapter.notifyDataSetChanged(mDataList);
+//                    } else {
+//                        String t = newText.replace(" ", "&%&");
+//                        dbSearch2(t);
+//                        //mAdapter.notifyDataSetChanged();
+//                        Toast.makeText(BaseActivity.this, "内容改变监听" + newText.trim(), Toast.LENGTH_SHORT).show();
+//                        q = 1;
+//                    }
+//                }else{
+//                    q = 0;
+//                    dbSearch();
+//                }
+//                String t = newText.replace(" ", "%");
+//                dbSearch2(t);
+
+//                if(!newText.trim().isEmpty()) {
+//                    String[] arr = newText.split("\\+\\s+");
+//                    dbSearch2(arr[0]);
+//
+//                    for (String ss : arr) {
+//                        if(!ss.equals(arr[0])){
+//                            Log.i("zunn", "字符串：" + ss);
+//                            dbSearch2(ss);
+//                            //mDataList = getNewData(ss);
+//                            //mAdapter.notifyDataSetChanged(mDataList);
+//                        }
+//                    }
+//                }else{
+//                    dbSearch();
+//                }
+
+                //                如果newText不是长度为0的字符串
+//                if (TextUtils.isEmpty(newText)){
+//                    //清除ListView的过滤
+//                    newText.trim();
+//                    mDataList.clearTextFilter();
+//
+//                }else {
+//                    //使用用户输入的内容对ListView的列表项进行过滤
+//                    mDataList.setFilterText(newText);
+//                }
+//                    if (arr2 == arr){
+//
+//                    }else{
+//                        for(String ss : arr){
+//                            if(!n.equals(ss)){
+//                                Log.i("zunn","字符串："+ss);
+//                                //dbSearch2(ss);
+//                            }n = n+ss;
+//                        }arr2 = arr;
+//                    }
+                    //dbSearch2(ss);
+
+//                n = newText;
+//                    String sss = "(^\\s*)|(\\s*$)";
+
+                if(!newText.trim().isEmpty()){  //如果字符串去掉前后空格不为空
+                    isName = 1;
+                    String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
+                    Log.i("zunn","字符串最后："+qqq+",,");
+                    //if(!qqq.equals(" ")) { //如果字符串最后一个字符 不是空格，方才进行搜索，因为在输入关键字后加的空格会造成重复搜索
+                        dbSearch2(newText,isName);
+//                    }else{
+//                        dbSearch2(newText);
+//                    }
+                }else{
+
+                    //and1 = null;
+                    mDataList.clear();
+                    mAdapter.notifyDataSetChanged(mDataList);
+                    andname = "";
+                }
+                //and1 = null;
+                return true;
+            }
+        });
+
+    }
+    private List<nianhui_info> getNewData(String input_info) {
+        //mDataList.clear();
+        for (int i = 0; i < mDataList.size(); i++) {
+            nianhui_info nn = mDataList.get(i);
+            if (nn.getName().contains(input_info)) {
+                mDataList.add(nn);
+            }
+        }
+        return mDataList;
     }
 
     protected int getContentView() {
@@ -259,6 +407,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         btn_clearchaxun = findViewById(R.id.btn_clear);
         btn_del_database = findViewById(R.id.btn_del_database);
         btn_read_database = findViewById(R.id.btn_read_database);
+        searchView_name = findViewById(R.id.searchView_name);
+        searchView_size = findViewById(R.id.searchView_size);
+    }
+    public void initSearchView(){
+        searchView_name.setQueryHint("名称搜索");
+        searchView_size.setQueryHint("规格搜索");
+        searchView_name.setIconified(false);
+        searchView_size.setIconified(false);
     }
     //初始化SQL数据库
     public void initDatabase(){
@@ -281,11 +437,13 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     //拖拽item直接改动数据库
     public void DragChangeDb() {
         //先删除数据表
-        deldb();
+        //deldb();
+        //delDragList();
         //再插入数据表，把前中后段加载的 mDataList3 遍历赋值给数据表
         Log.i("zun", "删除数据表");
         ContentValues values = new ContentValues();
         for (nianhui_info nhi : mDataList) {
+            values.put("id", nhi.getId());
             values.put("remark", nhi.getRemark());
             values.put("name", nhi.getName());
             values.put("size", nhi.getSize());
@@ -295,7 +453,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
             values.put("time", nhi.getTime());
             values.put("supplier", nhi.getSupplier());
             db.insert("nianhui", null, values);
-        }
+        }Log.i("zunl","DragChangeDb："+mDataList.toString());
+    }
+    //与拖拽item配套的删除 mDatalist对应数据表行的方法
+    public void delDragList(){
+        for(int i = 0; i < mDataList.size(); i++){
+            String str = String.valueOf(mDataList.get(i).getId());
+            db.delete("nianhui", "id=?", new String[]{str});
+        }Log.i("zunl","delDragList："+mDataList.toString());
     }
 
     //SQL数据库 修改/更新数据
@@ -325,6 +490,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         Log.i("zun","dbSearch2()");
         //创建游标对象
         Cursor cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
+
         //利用游标遍历所有数据对象
         //为了显示全部，把所有对象连接起来，放到TextView中
         Log.i("zun","dbSearch3()");
@@ -355,6 +521,216 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         mDataList = mDataList2;
         mAdapter.notifyDataSetChanged(mDataList);
         Log.i("zun","1");
+        // 关闭游标，释放资源
+        cursor.close();
+    }
+    public void dbSearch2(String newText, int isWhat){
+        Cursor cursor;
+
+        Log.i("zun","dbSearch()");
+        Log.i("zun","dbSearch2()");
+        //String[] arr = s.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(把空格都过滤掉，但是首位的空格无法过滤)
+        if(isWhat == 1){
+            setandname(newText); //设置sql语句
+            //isName = 0;
+        }else if(isWhat == 2){
+            setandsize(newText);
+            //isSize = 0;
+        }else{
+            Toast.makeText(this,"输入无效",Toast.LENGTH_SHORT).show();
+        }
+        Log.i("zunnn","sql最终:"+sql);
+        cursor = db.rawQuery(sql,null);
+
+//        if(!s.trim().isEmpty()) {
+
+//                if(arr.length == 1){
+//                    sql = "select * from nianhui where name like '%"+arr[0]+"%' or size like '%"+arr[0]+"%'";
+//                    //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\"",null);
+//                    //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\" and size like \"%"+arr[0]+"%\"",null);
+//                    cursor = db.rawQuery(sql,null);
+//                    Log.i("zunn","length == 1");
+//                }else{
+//                    sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%' and size like '%"+arr[1]+"%'";
+//                    String sql2 = "select * from nianhui where name like '%"+arr[0]+"%' and size like '%"+arr[1]+"%'";
+//                    //String sql3 = "select * from nianhui where name = '%"+arr[0]+"%' and size = '%"+arr[1]+"%'";
+//                    //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\" and name like \"%"+arr[1]+"%\"",null);
+//                    //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\""+and1,null);
+//                    //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\" and size like \"%"+arr[1]+"%\""+and1,null);
+//                    //cursor = db.rawQuery(sql4 ,null);
+//                    Log.i("zunn","length:"+arr.length);
+//                    Log.i("zunn","arr[0]:"+arr[0]);
+//                    Log.i("zunn","arr[1]:"+arr[1]);
+//                    Log.i("zunn","and1成功:");
+//                }
+//                cursor = db.rawQuery(sql+and1 ,null);
+
+//        }else{
+//            cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
+//            and1 = null;
+//            Log.i("zunn","empty");
+//        }
+
+        //String tt = "select * from nianhui where name like \"%"+arr[0]+"%\"";
+        //String tt2 = "select * from nianhui where name like \"%"+arr[1]+"%\"";
+
+        //String t = s.replace(" ", " AND %");
+        //创建游标对象
+        //Cursor cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
+        //Cursor cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\"",null);//第2个参数为select语句中占位符参数的值，如果select语句没有使用占位符，该参数可以设置为null
+
+        //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\" and name like \"%"+arr[1]+"%\"",null);
+        //Cursor cursor2 = db.rawQuery("select * from nianhui where name in (select * from nianhui where name like \"%"+s+"%\")",null);
+        //String strr = "select * from stu where name like \"%宁%\"";
+        //Cursor cursor = db.rawQuery(tt,null);
+
+        //利用游标遍历所有数据对象
+        //为了显示全部，把所有对象连接起来，放到TextView中
+        Log.i("zun","dbSearch3()");
+
+        mDataList2 = new ArrayList<>();
+        while(cursor.moveToNext()){
+            int temp_id = cursor.getColumnIndex("id");
+            int temp_remark = cursor.getColumnIndex("remark");
+            int temp_name = cursor.getColumnIndex("name");
+            int temp_size= cursor.getColumnIndex("size");
+            int temp_sizePlus = cursor.getColumnIndex("sizePlus");
+            int temp_sellingPrice = cursor.getColumnIndex("sellingPrice");
+            int temp_purchasingPrice = cursor.getColumnIndex("purchasingPrice");
+            int temp_time = cursor.getColumnIndex("time");
+            int temp_supplier = cursor.getColumnIndex("supplier");
+            int id = cursor.getInt(temp_id);
+            String name = cursor.getString(temp_name);
+            String remark = cursor.getString(temp_remark);
+            String size = cursor.getString(temp_size);
+            String sizePlus = cursor.getString(temp_sizePlus);
+            String sellingPrice = cursor.getString(temp_sellingPrice);
+            String purchasingPrice = cursor.getString(temp_purchasingPrice);
+            String supplier = cursor.getString(temp_supplier);
+            String time = cursor.getString(temp_time);
+            nianhui_info nh = new nianhui_info(id,remark,name,size,sizePlus,sellingPrice,purchasingPrice,time,supplier);
+            mDataList2.add(nh);
+        }
+        mDataList = mDataList2;
+        mAdapter.notifyDataSetChanged(mDataList);
+        Log.i("zun","1");
+        // 关闭游标，释放资源
+        cursor.close();
+    }
+    public void setandname(String nameText){
+        String[] arr = nameText.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(把空格都过滤掉，split("\\s+")无法过滤首空格，所以要先trim())
+        firstname = arr[0];
+        Log.i("zunn","arr:"+ Arrays.toString(arr));
+        if(arr.length == 1){
+            if(firstsize != null){
+                sql = "select * from nianhui where name like '%"+arr[0]+"%'"+" and size like '%"+firstsize+"%'";
+                and1 = " ";
+            }else{
+                sql = "select * from nianhui where name like '%"+arr[0]+"%'";
+            }
+            Log.i("zunnn","sql1:"+sql);
+        }else{
+            for (int i = 1; i < arr.length; i++) {
+                Log.i("zunn","arr.length："+arr.length);
+                and1 = getandname(arr[i].trim(),arr.length); //arr从索引1开始
+            }
+            sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1+and2;
+            Log.i("zunnn","sql2:"+sql);
+        }
+        Log.i("zunn","name and1:"+and1);
+    }
+    public void setandsize(String sizeText){
+        String[] arr = sizeText.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(把空格都过滤掉，但是首位的空格无法过滤)
+        firstsize = arr[0];
+        Log.i("zunn","arr:"+ Arrays.toString(arr));
+        if(arr.length == 1){
+            if(firstname != null){
+                sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'"+and1;
+                and2 = " ";
+                Log.i("zunnn","sql3:"+sql);
+            }else{
+                sql = "select * from nianhui where size like '%"+arr[0]+"%'";
+            }
+            and2 = " ";
+        }else{
+            for (int i = 1; i < arr.length; i++) {
+                Log.i("zunn","arr.length："+arr.length);
+                and2 = getandsize(arr[i].trim(),arr.length);
+            }
+            sql = "SELECT * FROM nianhui where size like '%"+arr[0]+"%'"+and2+and1;
+        }
+        Log.i("zunn","size and1:"+and2);
+    }
+    public String getandname(String s, int arrlength){
+        andd = "and name like '%"+s+"%'";
+        //andd = "and name like \"%"+s+"%\" and size like \"%"+s+"%\"";
+        //for(int i = 1; i < arrlength; i++){
+            andname = andname + andd;
+            Log.i("zunn","getandname:"+andname);
+        return andname;
+    }
+    public String getandsize(String s, int arrlength){
+        andd2 = "and size like '%"+s+"%'";
+        //andd = "and name like \"%"+s+"%\" and size like \"%"+s+"%\"";
+        //for(int i = 1; i < arrlength; i++){
+        andsize = andsize + andd2;
+        Log.i("zunn","getandsize:"+andsize);
+        return andsize;
+    }
+    public void dbSearchSize(String s) {
+        Cursor cursor;
+        Log.i("zun", "dbSearch()");
+        Log.i("zun", "dbSearch2()");
+
+        String[] arr = s.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(把空格都过滤掉，但是首位的空格无法过滤)
+        //Log.i("zunn","arr.length："+arr.length);
+        Log.i("zunn", "arr:" + Arrays.toString(arr));
+
+        for (int i = 1; i < arr.length; i++) {
+            Log.i("zunn", "arr.length：" + arr.length);
+            and1 = getandname(arr[i].trim(), arr.length);
+        }
+        Log.i("zunn", "and1:" + and1);
+        if (arr.length == 1) {
+            cursor = db.rawQuery("select * from nianhui where size like \"%" + arr[0] + "%\"", null);
+            Log.i("zunn", "length == 1");
+        } else {
+            //cursor = db.rawQuery("select * from nianhui where name like \"%"+arr[0]+"%\" and name like \"%"+arr[1]+"%\"",null);
+            cursor = db.rawQuery("select * from nianhui where size like \"%" + arr[0] + "%\"" + and1, null);
+            Log.i("zunn", "length:" + arr.length);
+            Log.i("zunn", "arr[0]:" + arr[0]);
+            Log.i("zunn", "arr[1]:" + arr[1]);
+            Log.i("zunn", "and1成功:");
+            and = "";
+        }
+        Log.i("zun", "dbSearch3()");
+
+        mDataList2 = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int temp_id = cursor.getColumnIndex("id");
+            int temp_remark = cursor.getColumnIndex("remark");
+            int temp_name = cursor.getColumnIndex("name");
+            int temp_size = cursor.getColumnIndex("size");
+            int temp_sizePlus = cursor.getColumnIndex("sizePlus");
+            int temp_sellingPrice = cursor.getColumnIndex("sellingPrice");
+            int temp_purchasingPrice = cursor.getColumnIndex("purchasingPrice");
+            int temp_time = cursor.getColumnIndex("time");
+            int temp_supplier = cursor.getColumnIndex("supplier");
+            int id = cursor.getInt(temp_id);
+            String name = cursor.getString(temp_name);
+            String remark = cursor.getString(temp_remark);
+            String size = cursor.getString(temp_size);
+            String sizePlus = cursor.getString(temp_sizePlus);
+            String sellingPrice = cursor.getString(temp_sellingPrice);
+            String purchasingPrice = cursor.getString(temp_purchasingPrice);
+            String supplier = cursor.getString(temp_supplier);
+            String time = cursor.getString(temp_time);
+            nianhui_info nh = new nianhui_info(id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier);
+            mDataList2.add(nh);
+        }
+        mDataList = mDataList2;
+        mAdapter.notifyDataSetChanged(mDataList);
+        Log.i("zun", "1");
         // 关闭游标，释放资源
         cursor.close();
     }
