@@ -206,10 +206,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                     Log.i("zunn","字符串最后："+qqq+",,");
                     dbSearch2(newText,isSize);
                 }else{
-
-                    dbSearch2(tempTextName,1); //如果规格删减为空则重新调用名称搜索
-                    //mDataList.clear();
-                    mAdapter.notifyDataSetChanged(mDataList);
+                    firstsize = null;
+                    and2 = null;
+                    if(tempTextName != null){
+                        dbSearch2(tempTextName,1); //如果规格删减为空则重新调用名称搜索
+                    }else {
+                        mDataList.clear();
+                        mAdapter.notifyDataSetChanged(mDataList);
+                    }
                     //andsize = "";
                 }
 
@@ -296,11 +300,13 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 //                        dbSearch2(newText);
 //                    }
                 }else{
-
+                    firstname = null;
+                    and1 = null;
                     //and1 = null;
                     mDataList.clear();
                     mAdapter.notifyDataSetChanged(mDataList);
                     andname = "";
+
                 }
                 //and1 = null;
                 return true;
@@ -634,20 +640,31 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 Log.i("zunn","arr.length："+arr.length);
                 and1 = getandname(arr[i].trim(),arr.length); //arr从索引1开始
             }
-            sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1+and2;
+            if(and2 != null){
+                sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1+and2;
+            }else{
+                sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1;
+            }
+
+            and1 = "";
             Log.i("zunnn","sql2:"+sql);
         }
         Log.i("zunn","name and1:"+and1);
     }
     public void setandsize(String sizeText){
-        String[] arr = sizeText.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(把空格都过滤掉，但是首位的空格无法过滤)
+        String[] arr = sizeText.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(                                                                    把空格都过滤掉，但是首位的空格无法过滤)
         firstsize = arr[0];
         Log.i("zunn","arr:"+ Arrays.toString(arr));
         if(arr.length == 1){
             if(firstname != null){
-                sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'"+and1;
+                if(and1 !=null){
+                    sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'"+and1;
+                }else{
+                    sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'";
+                }
                 and2 = " ";
                 Log.i("zunnn","sql3:"+sql);
+                //andname="";
             }else{
                 sql = "select * from nianhui where size like '%"+arr[0]+"%'";
             }
@@ -658,6 +675,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 and2 = getandsize(arr[i].trim(),arr.length);
             }
             sql = "SELECT * FROM nianhui where size like '%"+arr[0]+"%'"+and2+and1;
+            and2 = "";
         }
         Log.i("zunn","size and1:"+and2);
     }
@@ -665,7 +683,8 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         andd = "and name like '%"+s+"%'";
         //andd = "and name like \"%"+s+"%\" and size like \"%"+s+"%\"";
         //for(int i = 1; i < arrlength; i++){
-            andname = andname + andd;
+            //andname = andname + andd;
+            andname = andd;
             Log.i("zunn","getandname:"+andname);
         return andname;
     }
@@ -673,7 +692,8 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         andd2 = "and size like '%"+s+"%'";
         //andd = "and name like \"%"+s+"%\" and size like \"%"+s+"%\"";
         //for(int i = 1; i < arrlength; i++){
-        andsize = andsize + andd2;
+        //andsize = andsize + andd2;
+        andsize = andd2;
         Log.i("zunn","getandsize:"+andsize);
         return andsize;
     }
