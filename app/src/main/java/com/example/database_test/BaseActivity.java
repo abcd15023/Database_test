@@ -19,7 +19,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +65,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     protected List<nianhui_info> mDataList3;
 
     EditText et1, et11, et2, et22, et222, et3;
+    EditText etSearchName,etSearchSize;
     Button btn_insert, btn_clear1;
     Button btn_update, btn_clear2;
     Button btn_del, btn_clear3;
@@ -71,7 +74,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     TextView text1,text2,text3;
     String gettext1,gettext11,gettext2,gettext22,gettext222,gettext3;
     SQLiteDatabase db;
-    SearchView searchView_name,searchView_size;
+    //SearchView searchView_name,searchView_size;
     RecyclerView recyclerView1;
     String tt = "";
     String n;
@@ -83,11 +86,13 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     String and1=" ",and2=" ";
     String andname = "";
     String andsize = "";
+    String ands = "";
     int isName,isSize;
     String sql;
     String tempTextName,tempTextSize;
     int firstSearch = 0;
     String firstname,firstsize;
+    public static String tempNewtext;
     //ArrayList<nianhui_info> nianhuidata;
     //MyAdapter adapter;
 
@@ -106,12 +111,15 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 //            mActionBar.setDisplayHomeAsUpEnabled(true);
 //        }
         initView();
-        initSearchView();
+        //initSearchView();
         initDatabase();
         mLayoutManager = createLayoutManager();
         mItemDecoration = createItemDecoration();
         mDataList = createDataList();
         mAdapter = createAdapter();
+
+        mDataList.clear();
+        mAdapter.notifyDataSetChanged(mDataList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(mItemDecoration);
@@ -189,129 +197,153 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 //                dbSearch();
             }
         });
-        searchView_size.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        etSearchName.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.i("zunet", "beforeTextChanged: charSequence=" + s + ", start=" + start + ", count=" + count + ", after=" + after);
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                tempTextSize = newText;
-
-                isSize = 2;
-                if(!newText.trim().isEmpty()){  //如果字符串去掉前后空格不为空
-
-                    String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
-                    Log.i("zunn","字符串最后："+qqq+",,");
-                    dbSearch2(newText,isSize);
-                }else{
-                    firstsize = null;
-                    and2 = null;
-                    if(tempTextName != null){
-                        dbSearch2(tempTextName,1); //如果规格删减为空则重新调用名称搜索
-                    }else {
-                        mDataList.clear();
-                        mAdapter.notifyDataSetChanged(mDataList);
-                    }
-                    //andsize = "";
-                }
-
-                return true;
-            }
-        });
-        searchView_name.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override   //提交按钮监听事件
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(BaseActivity.this,"提交监听",Toast.LENGTH_SHORT).show();
-                return false;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i("zunet", "onTextChanged: charSequence=" + s + ", start=" + start + ", before=" + before + ", count=" + count);
             }
 
-            @Override   //搜索框内容改变监听
-            public boolean onQueryTextChange(String newText) {
-                tempTextName = newText;
-                //mDataList.clear();
-//                if(!newText.trim().isEmpty()) {
-//                    if (q != 0) {
-//                        mDataList = getNewData(newText);
-//                        mAdapter.notifyDataSetChanged(mDataList);
-//                    } else {
-//                        String t = newText.replace(" ", "&%&");
-//                        dbSearch2(t);
-//                        //mAdapter.notifyDataSetChanged();
-//                        Toast.makeText(BaseActivity.this, "内容改变监听" + newText.trim(), Toast.LENGTH_SHORT).show();
-//                        q = 1;
-//                    }
-//                }else{
-//                    q = 0;
-//                    dbSearch();
-//                }
-//                String t = newText.replace(" ", "%");
-//                dbSearch2(t);
-
-//                if(!newText.trim().isEmpty()) {
-//                    String[] arr = newText.split("\\+\\s+");
-//                    dbSearch2(arr[0]);
-//
-//                    for (String ss : arr) {
-//                        if(!ss.equals(arr[0])){
-//                            Log.i("zunn", "字符串：" + ss);
-//                            dbSearch2(ss);
-//                            //mDataList = getNewData(ss);
-//                            //mAdapter.notifyDataSetChanged(mDataList);
-//                        }
-//                    }
-//                }else{
-//                    dbSearch();
-//                }
-
-                //                如果newText不是长度为0的字符串
-//                if (TextUtils.isEmpty(newText)){
-//                    //清除ListView的过滤
-//                    newText.trim();
-//                    mDataList.clearTextFilter();
-//
-//                }else {
-//                    //使用用户输入的内容对ListView的列表项进行过滤
-//                    mDataList.setFilterText(newText);
-//                }
-//                    if (arr2 == arr){
-//
-//                    }else{
-//                        for(String ss : arr){
-//                            if(!n.equals(ss)){
-//                                Log.i("zunn","字符串："+ss);
-//                                //dbSearch2(ss);
-//                            }n = n+ss;
-//                        }arr2 = arr;
-//                    }
-                    //dbSearch2(ss);
-
-//                n = newText;
-//                    String sss = "(^\\s*)|(\\s*$)";
-
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i("zunet", "afterTextChanged: editable=" + s);
+                String newText = String.valueOf(s);
+                tempNewtext = newText; //用于滑动删除时更新列表，需要这个全局变量
                 if(!newText.trim().isEmpty()){  //如果字符串去掉前后空格不为空
-                    isName = 1;
-                    String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
-                    Log.i("zunn","字符串最后："+qqq+",,");
-                    //if(!qqq.equals(" ")) { //如果字符串最后一个字符 不是空格，方才进行搜索，因为在输入关键字后加的空格会造成重复搜索
-                        dbSearch2(newText,isName);
-//                    }else{
-//                        dbSearch2(newText);
-//                    }
+                    //String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
+                    dbSearch5(newText);
                 }else{
-                    firstname = null;
-                    and1 = null;
-                    //and1 = null;
+                    //dbSearch2(tempTextName,1); //如果规格删减为空则重新调用名称搜索
                     mDataList.clear();
                     mAdapter.notifyDataSetChanged(mDataList);
-                    andname = "";
-
+                    //andsize = "";
                 }
-                //and1 = null;
-                return true;
             }
         });
+
+//        searchView_size.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                tempTextSize = newText;
+//
+//                isSize = 2;
+//                if(!newText.trim().isEmpty()){  //如果字符串去掉前后空格不为空
+//
+//                    String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
+//                    Log.i("zunn","字符串最后："+qqq+",,");
+//                    dbSearch2(newText,isSize);
+//                }else{
+//
+//                    dbSearch2(tempTextName,1); //如果规格删减为空则重新调用名称搜索
+//                    //mDataList.clear();
+//                    mAdapter.notifyDataSetChanged(mDataList);
+//                    //andsize = "";
+//                }
+//
+//                return true;
+//            }
+//        });
+
+//        searchView_name.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override   //提交按钮监听事件
+//            public boolean onQueryTextSubmit(String query) {
+//                Toast.makeText(BaseActivity.this,"提交监听",Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//
+//            @Override   //搜索框内容改变监听
+//            public boolean onQueryTextChange(String newText) {
+//                tempTextName = newText;
+//                //mDataList.clear();
+////                if(!newText.trim().isEmpty()) {
+////                    if (q != 0) {
+////                        mDataList = getNewData(newText);
+////                        mAdapter.notifyDataSetChanged(mDataList);
+////                    } else {
+////                        String t = newText.replace(" ", "&%&");
+////                        dbSearch2(t);
+////                        //mAdapter.notifyDataSetChanged();
+////                        Toast.makeText(BaseActivity.this, "内容改变监听" + newText.trim(), Toast.LENGTH_SHORT).show();
+////                        q = 1;
+////                    }
+////                }else{
+////                    q = 0;
+////                    dbSearch();
+////                }
+////                String t = newText.replace(" ", "%");
+////                dbSearch2(t);
+//
+////                if(!newText.trim().isEmpty()) {
+////                    String[] arr = newText.split("\\+\\s+");
+////                    dbSearch2(arr[0]);
+////
+////                    for (String ss : arr) {
+////                        if(!ss.equals(arr[0])){
+////                            Log.i("zunn", "字符串：" + ss);
+////                            dbSearch2(ss);
+////                            //mDataList = getNewData(ss);
+////                            //mAdapter.notifyDataSetChanged(mDataList);
+////                        }
+////                    }
+////                }else{
+////                    dbSearch();
+////                }
+//
+//                //                如果newText不是长度为0的字符串
+////                if (TextUtils.isEmpty(newText)){
+////                    //清除ListView的过滤
+////                    newText.trim();
+////                    mDataList.clearTextFilter();
+////
+////                }else {
+////                    //使用用户输入的内容对ListView的列表项进行过滤
+////                    mDataList.setFilterText(newText);
+////                }
+////                    if (arr2 == arr){
+////
+////                    }else{
+////                        for(String ss : arr){
+////                            if(!n.equals(ss)){
+////                                Log.i("zunn","字符串："+ss);
+////                                //dbSearch2(ss);
+////                            }n = n+ss;
+////                        }arr2 = arr;
+////                    }
+//                    //dbSearch2(ss);
+//
+////                n = newText;
+////                    String sss = "(^\\s*)|(\\s*$)";
+//
+//                if(!newText.trim().isEmpty()){  //如果字符串去掉前后空格不为空
+//                    isName = 1;
+//                    String qqq = newText.substring(newText.length()-1); //获取字符串最后一个字符
+//                    Log.i("zunn","字符串最后："+qqq+",,");
+//                    //if(!qqq.equals(" ")) { //如果字符串最后一个字符 不是空格，方才进行搜索，因为在输入关键字后加的空格会造成重复搜索
+//                        dbSearch2(newText,isName);
+////                    }else{
+////                        dbSearch2(newText);
+////                    }
+//                }else{
+//
+//                    //and1 = null;
+//                    mDataList.clear();
+//                    mAdapter.notifyDataSetChanged(mDataList);
+//                    andname = "";
+//                }
+//                //and1 = null;
+//                return true;
+//            }
+//        });
 
     }
     private List<nianhui_info> getNewData(String input_info) {
@@ -413,15 +445,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         btn_clearchaxun = findViewById(R.id.btn_clear);
         btn_del_database = findViewById(R.id.btn_del_database);
         btn_read_database = findViewById(R.id.btn_read_database);
-        searchView_name = findViewById(R.id.searchView_name);
-        searchView_size = findViewById(R.id.searchView_size);
+        etSearchName = findViewById(R.id.etSearchName);
     }
-    public void initSearchView(){
-        searchView_name.setQueryHint("名称搜索");
-        searchView_size.setQueryHint("规格搜索");
-        searchView_name.setIconified(false);
-        searchView_size.setIconified(false);
-    }
+//    public void initSearchView(){
+//        searchView_name.setQueryHint("名称搜索");
+//        searchView_size.setQueryHint("规格搜索");
+//        searchView_name.setIconified(false);
+//        searchView_size.setIconified(false);
+//    }
     //初始化SQL数据库
     public void initDatabase(){
         //依靠DatabaseHelper带全部参数的构造函数创建数据库，数据库名为nianhui_db
@@ -492,11 +523,11 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     }
     //SQL数据库 查找数据
     public void dbSearch(){
+        Cursor cursor;
         Log.i("zun","dbSearch()");
         Log.i("zun","dbSearch2()");
         //创建游标对象
-        Cursor cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
-
+        cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
         //利用游标遍历所有数据对象
         //为了显示全部，把所有对象连接起来，放到TextView中
         Log.i("zun","dbSearch3()");
@@ -530,6 +561,72 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         // 关闭游标，释放资源
         cursor.close();
     }
+    public void dbSearch5(String newText){
+        Cursor cursor;
+        Log.i("zun","dbSearch()");
+        Log.i("zun","dbSearch2()");
+        db.execSQL("UPDATE nianhui SET name = '' WHERE name IS NULL");
+        db.execSQL("UPDATE nianhui SET size = '' WHERE size IS NULL");
+        db.execSQL("UPDATE nianhui SET sizePlus = '' WHERE sizePlus IS NULL");
+        //创建游标对象
+        //cursor = db.query("nianhui", new String[]{"id","remark","name","size","sizePlus","sellingPrice","purchasingPrice","time","supplier"}, null, null, null, null, null);
+        sql = getSql(newText);
+        cursor = db.rawQuery(sql, null);
+        ands = "";
+        //利用游标遍历所有数据对象
+        //为了显示全部，把所有对象连接起来，放到TextView中
+        Log.i("zun","dbSearch3()");
+
+        mDataList2 = new ArrayList<>();
+        while(cursor.moveToNext()){
+            int temp_id = cursor.getColumnIndex("id");
+            int temp_remark = cursor.getColumnIndex("remark");
+            int temp_name = cursor.getColumnIndex("name");
+            int temp_size= cursor.getColumnIndex("size");
+            int temp_sizePlus = cursor.getColumnIndex("sizePlus");
+            int temp_sellingPrice = cursor.getColumnIndex("sellingPrice");
+            int temp_purchasingPrice = cursor.getColumnIndex("purchasingPrice");
+            int temp_time = cursor.getColumnIndex("time");
+            int temp_supplier = cursor.getColumnIndex("supplier");
+            int id = cursor.getInt(temp_id);
+            String name = cursor.getString(temp_name);
+            String remark = cursor.getString(temp_remark);
+            String size = cursor.getString(temp_size);
+            String sizePlus = cursor.getString(temp_sizePlus);
+            String sellingPrice = cursor.getString(temp_sellingPrice);
+            String purchasingPrice = cursor.getString(temp_purchasingPrice);
+            String supplier = cursor.getString(temp_supplier);
+            String time = cursor.getString(temp_time);
+            nianhui_info nh = new nianhui_info(id,remark,name,size,sizePlus,sellingPrice,purchasingPrice,time,supplier);
+            mDataList2.add(nh);
+        }
+        mDataList = mDataList2;
+        mAdapter.notifyDataSetChanged(mDataList);
+        Log.i("zun","1");
+        // 关闭游标，释放资源
+        cursor.close();
+    }
+    public String getSql(String newText){
+        String[] arr = newText.trim().split("\\s+");
+        if(arr.length == 1){
+            String sql3 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'";
+            return sql3;
+        }else{
+            for (int i = 1; i < arr.length; i++) {
+                Log.i("zunn","arr.length："+arr.length);
+                and1 = getAnd(arr[i].trim()); //arr从索引1开始
+            }
+            String sql4 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'"+and1;
+            return sql4;
+        }
+    }
+    public String getAnd(String s) {
+        andd = "and (name||''||size||''||sizePlus) like '%"+s+"%'";
+        ands = ands + andd;
+        Log.i("zunn","getandname:"+andname);
+        return ands;
+    }
+
     public void dbSearch2(String newText, int isWhat){
         Cursor cursor;
 
@@ -640,31 +737,20 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 Log.i("zunn","arr.length："+arr.length);
                 and1 = getandname(arr[i].trim(),arr.length); //arr从索引1开始
             }
-            if(and2 != null){
-                sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1+and2;
-            }else{
-                sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1;
-            }
-
-            and1 = "";
+            sql = "SELECT * FROM nianhui where name like '%"+arr[0]+"%'"+and1+and2;
             Log.i("zunnn","sql2:"+sql);
         }
         Log.i("zunn","name and1:"+and1);
     }
     public void setandsize(String sizeText){
-        String[] arr = sizeText.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(                                                                    把空格都过滤掉，但是首位的空格无法过滤)
+        String[] arr = sizeText.trim().split("\\s+"); //字符串去掉前后空格 再进行分隔生成数组操作(把空格都过滤掉，但是首位的空格无法过滤)
         firstsize = arr[0];
         Log.i("zunn","arr:"+ Arrays.toString(arr));
         if(arr.length == 1){
             if(firstname != null){
-                if(and1 !=null){
-                    sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'"+and1;
-                }else{
-                    sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'";
-                }
+                sql = "select * from nianhui where size like '%"+arr[0]+"%'"+" and name like '%"+firstname+"%'"+and1;
                 and2 = " ";
                 Log.i("zunnn","sql3:"+sql);
-                //andname="";
             }else{
                 sql = "select * from nianhui where size like '%"+arr[0]+"%'";
             }
@@ -675,7 +761,6 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 and2 = getandsize(arr[i].trim(),arr.length);
             }
             sql = "SELECT * FROM nianhui where size like '%"+arr[0]+"%'"+and2+and1;
-            and2 = "";
         }
         Log.i("zunn","size and1:"+and2);
     }
@@ -683,8 +768,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         andd = "and name like '%"+s+"%'";
         //andd = "and name like \"%"+s+"%\" and size like \"%"+s+"%\"";
         //for(int i = 1; i < arrlength; i++){
-            //andname = andname + andd;
-            andname = andd;
+            andname = andname + andd;
             Log.i("zunn","getandname:"+andname);
         return andname;
     }
@@ -692,8 +776,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         andd2 = "and size like '%"+s+"%'";
         //andd = "and name like \"%"+s+"%\" and size like \"%"+s+"%\"";
         //for(int i = 1; i < arrlength; i++){
-        //andsize = andsize + andd2;
-        andsize = andd2;
+        andsize = andsize + andd2;
         Log.i("zunn","getandsize:"+andsize);
         return andsize;
     }

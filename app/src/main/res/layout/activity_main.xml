@@ -184,49 +184,13 @@
             android:theme="@style/BlueButtonStyle" />
     </LinearLayout>
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/etSearchName"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/b6"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="ID"
-            android:textColor="#fff"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:gravity="center"
-            android:text="名称"
-            android:textColor="#fff"
-            android:textSize="18sp" />
-
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:gravity="center"
-            android:text="规格"
-            android:textColor="#fff"
-            android:textSize="18sp" />
-    </LinearLayout>
+        android:layout_height="60dp"
+        android:hint="输入名称 / 规格"
+        android:textColorHint="#D9D9D9"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

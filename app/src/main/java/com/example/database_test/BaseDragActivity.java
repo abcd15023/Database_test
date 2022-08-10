@@ -145,7 +145,7 @@ public abstract class BaseDragActivity extends BaseActivity {
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 if (menuPosition == 0){
                     dbDelItem(position);
-                    dbSearch();
+                    dbSearch5(tempNewtext);
                 }else{
                     Toast.makeText(BaseDragActivity.this, "暂无", Toast.LENGTH_SHORT).show();
                 }
