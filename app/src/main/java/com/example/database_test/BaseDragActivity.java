@@ -77,8 +77,8 @@ public abstract class BaseDragActivity extends BaseActivity {
             } else if (actionState == OnItemStateChangedListener.ACTION_STATE_IDLE) {
                 //mActionBar.setSubtitle("状态：手指松开");
 
-                delDragList(); //
-                DragChangeDb(); //拖动操作直接改变数据库
+                delDragList(); //先删除当前搜索结果下的mDataList对应数据库的数据
+                DragChangeDb(); //只在拖动松手后调用，把排好序的mDataList插入数据库
 
                 // 在手松开的时候还原背景。
                 ViewCompat.setBackground(viewHolder.itemView,
@@ -99,7 +99,7 @@ public abstract class BaseDragActivity extends BaseActivity {
             // 2. 指定具体的高，比如80;
             // 3. WRAP_CONTENT，自身高度，不推荐;
             //int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = 100;  //经测试，MATCH_PARENT下布局item的高度将无效！所以这里直接用数字，代表menu的高度
+            int height = 100;  //zun经测试，MATCH_PARENT下布局item的高度将无效！所以这里直接用数字，代表menu的高度
             // 添加左侧的，如果不添加，则左侧不会出现菜单。
 //            {
 //                SwipeMenuItem addItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
@@ -145,15 +145,15 @@ public abstract class BaseDragActivity extends BaseActivity {
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 if (menuPosition == 0){
                     dbDelItem(position);
-                    dbSearch5(tempNewtext);
+                    dbETSearch(tempNewtext);
                 }else{
                     Toast.makeText(BaseDragActivity.this, "暂无", Toast.LENGTH_SHORT).show();
                 }
-
-//            } else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
+            }
+//            else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
 //                Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT)
 //                    .show();
-            }
+//           }
         }
     };
 

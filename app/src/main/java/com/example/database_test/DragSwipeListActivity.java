@@ -59,7 +59,7 @@ public class DragSwipeListActivity extends BaseDragActivity {
         Log.i("zun","DragSwipeListActivity");
     }
 
-    @Override
+    @Override   //拖拽排序监听
     protected OnItemMoveListener getItemMoveListener() {
         // 监听拖拽和侧滑删除，更新UI和数据源。
         return new OnItemMoveListener() {
@@ -75,8 +75,7 @@ public class DragSwipeListActivity extends BaseDragActivity {
                 mAdapter.notifyItemMoved(fromPosition, toPosition);
                 Log.i("zun","OnItemMoveListener");
 
-
-                //DragChangeDb();//拖动操作直接改变数据库
+                //DragChangeDb();//拖动操作直接改变数据库，但是这里不能调用，因为拖拽每跨过一个item都会调用DragChangeDb()方法，造成重复错误插入数据
 
                 return true;// 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
             }
