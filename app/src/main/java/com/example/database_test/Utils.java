@@ -28,10 +28,10 @@ public class Utils {
     }
 
     //SQL数据库 插入数据
-    public static void dbInsert(int id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
+    public static void dbInsert( String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
         //创建存放数据的ContentValues对象
         ContentValues values = new ContentValues();
-        values.put("id",id);
+
         values.put("remark",remark);
         values.put("name",name); //给键名/列名name赋予键值
         values.put("size",size);
@@ -75,6 +75,7 @@ public class Utils {
         db.delete("nianhui", "id=?", new String[]{str});
         Log.i("zun","str"+str);
     }
+
     //SQL数据库 修改/更新数据
     public static void dbUpdate(String id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
 //        gettext2 = et2.getText().toString();

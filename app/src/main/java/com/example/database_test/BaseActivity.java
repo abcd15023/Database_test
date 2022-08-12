@@ -205,6 +205,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                     mDataList = Utils.mDataList; //用了Utils的搜索方法，也要把BaseActivity的mDataList更新一下
                 }else{
                     //搜索框为空则清空mDataList
+                    tempNewtext = null;
                     mDataList.clear();
                     mAdapter.notifyDataSetChanged(mDataList);
                 }
