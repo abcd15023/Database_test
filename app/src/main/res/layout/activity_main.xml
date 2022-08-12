@@ -182,6 +182,12 @@
             android:layout_height="wrap_content"
             android:text="重载数据库"
             android:theme="@style/BlueButtonStyle" />
+        <Button
+            android:id="@+id/btnadd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新增"
+            android:theme="@style/BlueButtonStyle"/>
     </LinearLayout>
 
     <EditText

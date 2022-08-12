@@ -15,6 +15,7 @@
  */
 package com.example.database_test;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,8 @@ import com.yanzhenjie.recyclerview.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import com.yanzhenjie.recyclerview.touch.OnItemMoveListener;
 import com.yanzhenjie.recyclerview.touch.OnItemStateChangedListener;
+
+import java.util.List;
 
 /**
  * <p>
@@ -56,6 +59,8 @@ public abstract class BaseDragActivity extends BaseActivity {
         mRecyclerView.setOnItemMoveListener(getItemMoveListener());// 监听拖拽和侧滑删除，更新UI和数据源。
         mRecyclerView.setOnItemStateChangedListener(mOnItemStateChangedListener); // 监听Item的手指状态，拖拽、侧滑、松开。
         Log.i("zun","BaseDragActivity");
+
+        Log.i("zundrag",mDataList.toString());
     }
 
     protected abstract OnItemMoveListener getItemMoveListener();
@@ -76,9 +81,11 @@ public abstract class BaseDragActivity extends BaseActivity {
                 //mActionBar.setSubtitle("状态：滑动删除");
             } else if (actionState == OnItemStateChangedListener.ACTION_STATE_IDLE) {
                 //mActionBar.setSubtitle("状态：手指松开");
-
+                Log.i("zundrag","1");
                 delDragList(); //先删除当前搜索结果下的mDataList对应数据库的数据
+                Log.i("zundrag","2");
                 DragChangeDb(); //只在拖动松手后调用，把排好序的mDataList插入数据库
+                Log.i("zundrag","3");
 
                 // 在手松开的时候还原背景。
                 ViewCompat.setBackground(viewHolder.itemView,
@@ -144,10 +151,32 @@ public abstract class BaseDragActivity extends BaseActivity {
             if (direction == SwipeRecyclerView.RIGHT_DIRECTION) {
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 if (menuPosition == 0){
-                    dbDelItem(position);
-                    dbETSearch(tempNewtext);
+                    Utils.dbDelItem(position);
+                    Utils.dbETSearch(tempNewtext);
                 }else{
-                    Toast.makeText(BaseDragActivity.this, "暂无", Toast.LENGTH_SHORT).show();
+                    mDataList = Utils.getmDataList(); //每次滑动菜单修改传值前先更新mDatalist
+                    Intent intent = new Intent();
+                    intent.setClass(BaseDragActivity.this,EditActivity.class);
+                    int id = mDataList.get(position).getId();
+                    String id2 = String.valueOf(id);
+                    String remark = String.valueOf(mDataList.get(position).getRemark());//通过Position得到item在数据库的元素
+                    String name = String.valueOf(mDataList.get(position).getName());
+                    String size = String.valueOf(mDataList.get(position).getSize());
+                    String sizePlus = String.valueOf(mDataList.get(position).getSizePlus());
+                    String sellingPrice = String.valueOf(mDataList.get(position).getSellingPrice());
+                    String purchasingPrice = String.valueOf(mDataList.get(position).getPurchasingPrice());
+                    String time = String.valueOf(mDataList.get(position).getTime());
+                    String supplier = String.valueOf(mDataList.get(position).getSupplier());
+                    intent.putExtra("id",id2);
+                    intent.putExtra("remark",remark);
+                    intent.putExtra("name",name);
+                    intent.putExtra("size",size);
+                    intent.putExtra("sizePlus",sizePlus);
+                    intent.putExtra("sellingPrice",sellingPrice);
+                    intent.putExtra("purchasingPrice",purchasingPrice);
+                    intent.putExtra("time",time);
+                    intent.putExtra("supplier",supplier);
+                    startActivity(intent);
                 }
             }
 //            else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {

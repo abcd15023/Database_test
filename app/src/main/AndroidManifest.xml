@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Database_test">
         <activity
+            android:name=".EditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddActivity"
+            android:exported="false" />
+        <activity
             android:name=".DragSwipeListActivity"
             android:exported="true">
             <intent-filter>
@@ -17,9 +23,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
     </application>
 
 </manifest>

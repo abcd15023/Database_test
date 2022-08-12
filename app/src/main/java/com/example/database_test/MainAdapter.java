@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
     }
 
     public void notifyDataSetChanged(List<nianhui_info> dataList) {
+
         this.mDataList = dataList;
         super.notifyDataSetChanged();
     }
@@ -53,18 +55,18 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.item1,parent,false);
+                inflate(R.layout.item3,parent,false);
         ViewHolder holder = new ViewHolder(view);
 
         //RecyclerView下的 行布局控件 都可以单独做点击事件
-        holder.text_id.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                nianhui_info nh = mDataList.get(position);
-                Toast.makeText(v.getContext(),String.valueOf(nh.getId()),Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.text_id.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int position = holder.getAdapterPosition();
+//                nianhui_info nh = mDataList.get(position);
+//                Toast.makeText(v.getContext(),String.valueOf(nh.getId()),Toast.LENGTH_SHORT).show();
+//            }
+//        });
         holder.text_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,15 +95,29 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
         nianhui_info nh = mDataList.get(position);
         Log.i("zun","1");
         String str = String.valueOf(nh.getId());
-        holder.text_id.setText(str);
+        //holder.text_id.setText(str);
         holder.text_remark.setText(nh.getRemark());
         holder.text_name.setText(nh.getName());
+        holder.text_name.setVisibility(View.VISIBLE);
         holder.text_size.setText(nh.getSize());
+        holder.text_size.setVisibility(View.VISIBLE);
         holder.text_sizePlus.setText(nh.getSizePlus());
+        Log.i("zunq","text_name："+nh.getName()+",text_size："+nh.getSize()+",text_sizePlus："+nh.getSizePlus());
+
         holder.text_sellingPrice.setText(nh.getSellingPrice());
         holder.text_purchasingPrice.setText(nh.getPurchasingPrice());
         holder.text_time.setText(nh.getTime());
         holder.text_supplier.setText(nh.getSupplier());
+
+        if(!nh.getRemark().isEmpty()){
+            holder.text_remark.setVisibility(View.VISIBLE);
+        }
+        if(!nh.getSize().trim().isEmpty()){
+            holder.text_size.setVisibility(View.VISIBLE);
+        }
+        if(!nh.getSizePlus().trim().isEmpty()){
+            holder.text_sizePlus.setVisibility(View.VISIBLE);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -112,18 +128,18 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
 //            super(itemView);
 //            tvTitle = itemView.findViewById(R.id.tv_title);
 //        }
-
         TextView text_id,text_remark,text_name,text_size,text_sizePlus,text_sellingPrice,text_purchasingPrice,text_time,text_supplier;
+
         //构造函数传入View参数，
         public ViewHolder(View view){
             super(view);
-            text_id = view.findViewById(R.id.item_id);
+
             text_remark = view.findViewById(R.id.item_remark);
             text_name = view.findViewById(R.id.item_name);
             text_size = view.findViewById(R.id.item_size);
             text_sizePlus = view.findViewById(R.id.item_sizePlus);
             text_sellingPrice = view.findViewById(R.id.item_sellingPrice);
-            text_purchasingPrice = view.findViewById(R.id.item1_purchasingPrice);
+            text_purchasingPrice = view.findViewById(R.id.item_purchasingPrice);
             text_time = view.findViewById(R.id.item_time);
             text_supplier = view.findViewById(R.id.item_supplier);
         }
@@ -143,4 +159,5 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
     public void clearList(){
         mDataList.clear();
     }
+
 }
