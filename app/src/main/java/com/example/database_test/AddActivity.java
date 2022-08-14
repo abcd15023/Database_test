@@ -19,8 +19,6 @@ public class AddActivity extends AppCompatActivity {
         initView();
         int id = Utils.getdbMaxId()+1;
 
-        etAddTime.setText(Utils.getTime()); //在增加商品时给time EditText自动补上系统时间
-
         btnuAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

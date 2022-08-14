@@ -30,7 +30,7 @@ public class EditActivity extends AppCompatActivity {
         sizePlus = getValue("sizePlus");
         sellingPrice = getValue("sellingPrice");
         purchasingPrice = getValue("purchasingPrice");
-        time = getValue("time")+"，"+Utils.getTime();
+        time = getValue("time");
         supplier = getValue("supplier");
 
         setIntentText();

@@ -64,19 +64,10 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     protected List<nianhui_info> mDataList;
     protected List<nianhui_info> mDataList2;
 
-    EditText et1, et11, et2, et22, et222, et3;
     EditText etSearchName;
-    Button btn_insert, btn_clear1;
-    Button btn_update, btn_clear2;
-    Button btn_del, btn_clear3;
-    Button btn_clearchaxun,btn_del_database,btn_read_database;
     Button btnadd;
-    String gettext1,gettext11,gettext2,gettext22,gettext222,gettext3;
+    TextView bottom_globalSearch, bottom_bearingSearch;
     SQLiteDatabase db;
-    String andd;
-    String and;
-    String ands = "";
-    String sql;
     public static String tempNewtext;
 
     @Override
@@ -119,71 +110,6 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 
         Utils.getdbMaxId();
 
-        btn_insert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //dbInsert();
-                //dbSearch();
-            }
-        });
-        btn_clear1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //et1.setText("");
-                //et11.setText("");
-                //dbSearch();
-            }
-        });
-        btn_update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //dbUpdate();
-                //dbSearch();
-            }
-        });
-        btn_clear2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                et2.setText("");
-//                et22.setText("");
-//                et222.setText("");
-//                dbSearch();
-            }
-        });
-        btn_del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                dbDelSingle();
-//                dbSearch();
-            }
-        });
-        btn_clear3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                et3.setText("");
-//                dbSearch();
-            }
-        });
-        btn_clearchaxun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mDataList.clear();
-//                mAdapter.notifyDataSetChanged(mDataList);
-            }
-        });
-        btn_del_database.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                deldb();
-//                dbSearch();
-            }
-        });
-        btn_read_database.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                dbSearch();
-            }
-        });
         //搜索框文本输入监听事件
         etSearchName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -219,6 +145,18 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 Intent intent = new Intent();
                 intent.setClass(BaseActivity.this,AddActivity.class);
                 startActivity(intent);
+            }
+        });
+        bottom_globalSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(BaseActivity.this, "全局搜索", Toast.LENGTH_SHORT).show();
+            }
+        });
+        bottom_bearingSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(BaseActivity.this, "轴承搜索", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -301,23 +239,10 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         return true;
     }
     public void initView(){
-        et1 = findViewById(R.id.et1);
-        et11 = findViewById(R.id.et11);
-        et2 = findViewById(R.id.et2);
-        et22 = findViewById(R.id.et22);
-        et222 = findViewById(R.id.et222);
-        et3 = findViewById(R.id.et3);
-        btn_insert = findViewById(R.id.btn1);
-        btn_clear1 = findViewById(R.id.btn11);
-        btn_update = findViewById(R.id.btn2);
-        btn_clear2 = findViewById(R.id.btn22);
-        btn_del = findViewById(R.id.btn3);
-        btn_clear3 = findViewById(R.id.btn33);
-        btn_clearchaxun = findViewById(R.id.btn_clear);
-        btn_del_database = findViewById(R.id.btn_del_database);
-        btn_read_database = findViewById(R.id.btn_read_database);
         etSearchName = findViewById(R.id.etSearchName);
         btnadd = findViewById(R.id.btnadd);
+        bottom_globalSearch = findViewById(R.id.bottom_globalSearch);
+        bottom_bearingSearch = findViewById(R.id.bottom_bearingSearch);
     }
 
     //初始化SQL数据库
@@ -374,8 +299,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         String sizePlus = String.valueOf(mDataList.get(position).getSizePlus());
         String sellingPrice = String.valueOf(mDataList.get(position).getSellingPrice());
         String purchasingPrice = String.valueOf(mDataList.get(position).getPurchasingPrice());
-        //String time = String.valueOf(mDataList.get(position).getTime());
-        String time = Utils.getTime();
+        String time = String.valueOf(mDataList.get(position).getTime());
         String supplier = String.valueOf(mDataList.get(position).getSupplier());
 
         Utils.dbInsert(id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier);

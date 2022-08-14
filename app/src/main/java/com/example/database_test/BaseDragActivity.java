@@ -189,11 +189,11 @@ public abstract class BaseDragActivity extends BaseActivity {
                 dbCopyItem(position);
                 Utils.dbETSearch(tempNewtext);
                 mDataList = Utils.getmDataList();
-                //复制项先是插在底部，位置是mDataList.size()-1，为了使其插在被复制项的下一行 position+1 ，等于是照搬拖拽排序的方法
+
                 Collections.swap(mDataList, mDataList.size()-1, position+1);
                 mAdapter.notifyItemMoved(mDataList.size()-1, position+1);
-                delDragList();  //删除老表
-                DragChangeDb(); //插入新表
+                delDragList();
+                DragChangeDb();
 
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 Log.i("zunxxx","复制按钮点击事件："+mDataList);

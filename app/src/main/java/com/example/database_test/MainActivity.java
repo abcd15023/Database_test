@@ -106,23 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void initView(){
-        et1 = findViewById(R.id.et1);
-        et11 = findViewById(R.id.et11);
-        et2 = findViewById(R.id.et2);
-        et22 = findViewById(R.id.et22);
-        et222 = findViewById(R.id.et222);
-        et3 = findViewById(R.id.et3);
-//        text1 = findViewById(R.id.item1_text1);
-//        text2 = findViewById(R.id.item1_text2);
-//        text3 = findViewById(R.id.item1_text3);
-        btn_insert = findViewById(R.id.btn1);
-        btn_clear1 = findViewById(R.id.btn11);
-        btn_update = findViewById(R.id.btn2);
-        btn_clear2 = findViewById(R.id.btn22);
-        btn_del = findViewById(R.id.btn3);
-        btn_clear3 = findViewById(R.id.btn33);
-        btn_clearchaxun = findViewById(R.id.btn_clear);
-        btn_del_database = findViewById(R.id.btn_del_database);
+
     }
     //初始化SQL数据库
     public void initDatabase(){

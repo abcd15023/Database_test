@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -240,11 +238,5 @@ public class Utils {
     public static void deldb(){
         db.execSQL("delete from nianhui");
         db.execSQL("update sqlite_sequence set seq=0 where name='nianhui'");
-    }
-    //获取系统时间，并格式化为String
-    public static String getTime(){
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//注意大小写
-        return sdf.format(date);
     }
 }
