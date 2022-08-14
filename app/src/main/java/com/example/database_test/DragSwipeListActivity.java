@@ -73,7 +73,7 @@ public class DragSwipeListActivity extends BaseDragActivity {
                 int toPosition = targetHolder.getAdapterPosition() - mRecyclerView.getHeaderCount();
                 Collections.swap(mDataList, fromPosition, toPosition);
                 mAdapter.notifyItemMoved(fromPosition, toPosition);
-                Log.i("zun","OnItemMoveListener");
+                Log.i("zunxxx","OnItemMoveListener()："+mDataList);
 
                 //DragChangeDb();//拖动操作直接改变数据库，但是这里不能调用，因为拖拽每跨过一个item都会调用DragChangeDb()方法，造成重复错误插入数据
 

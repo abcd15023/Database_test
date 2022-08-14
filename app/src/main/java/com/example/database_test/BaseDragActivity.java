@@ -58,9 +58,6 @@ public abstract class BaseDragActivity extends BaseActivity {
 
         mRecyclerView.setOnItemMoveListener(getItemMoveListener());// 监听拖拽和侧滑删除，更新UI和数据源。
         mRecyclerView.setOnItemStateChangedListener(mOnItemStateChangedListener); // 监听Item的手指状态，拖拽、侧滑、松开。
-        Log.i("zun","BaseDragActivity");
-
-        Log.i("zundrag",mDataList.toString());
     }
 
     protected abstract OnItemMoveListener getItemMoveListener();
@@ -81,11 +78,10 @@ public abstract class BaseDragActivity extends BaseActivity {
                 //mActionBar.setSubtitle("状态：滑动删除");
             } else if (actionState == OnItemStateChangedListener.ACTION_STATE_IDLE) {
                 //mActionBar.setSubtitle("状态：手指松开");
-                Log.i("zundrag","1");
+
                 delDragList(); //先删除当前搜索结果下的mDataList对应数据库的数据
-                Log.i("zundrag","2");
                 DragChangeDb(); //只在拖动松手后调用，把排好序的mDataList插入数据库
-                Log.i("zundrag","3");
+                Log.i("zunxxx","BaseDragActivity："+mDataList);
 
                 // 在手松开的时候还原背景。
                 ViewCompat.setBackground(viewHolder.itemView,
@@ -105,34 +101,41 @@ public abstract class BaseDragActivity extends BaseActivity {
             // 1. MATCH_PARENT 自适应高度，保持和Item一样高;
             // 2. 指定具体的高，比如80;
             // 3. WRAP_CONTENT，自身高度，不推荐;
-            //int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = 100;  //zun经测试，MATCH_PARENT下布局item的高度将无效！所以这里直接用数字，代表menu的高度
+            int height = ViewGroup.LayoutParams.MATCH_PARENT; //如果自定义图片+文字高于item,则并不会与item同高，就需要自定义高度
+            //int height = 100;  //自定义高度
+
             // 添加左侧的，如果不添加，则左侧不会出现菜单。
-//            {
-//                SwipeMenuItem addItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
-//                    R.drawable.selector_green).setImage(R.drawable.ic_action_add).setWidth(width).setHeight(height);
-//                swipeLeftMenu.addMenuItem(addItem); // 添加一个按钮到左侧菜单。
-//
+            {
+                SwipeMenuItem addItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
+                        R.drawable.selector_green)
+                        //.setImage(R.drawable.ic_action_add)
+                        .setText("复制")
+                        .setWidth(width).setHeight(height);
+                swipeLeftMenu.addMenuItem(addItem); // 添加一个按钮到左侧菜单。
+
 //                SwipeMenuItem closeItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
 //                    R.drawable.selector_red).setImage(R.drawable.ic_action_close).setWidth(width).setHeight(height);
 //
 //                swipeLeftMenu.addMenuItem(closeItem); // 添加一个按钮到左侧菜单。
-//            }
+            }
 
             // 添加右侧的，如果不添加，则右侧不会出现菜单。
             {
-                SwipeMenuItem deleteItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
-                    R.drawable.selector_red)
-                    .setImage(R.drawable.ic_action_delete)
-                    .setText("删除")
-                    .setTextColor(Color.WHITE)
-                    .setWidth(width)
-                    .setHeight(height);
-                swipeRightMenu.addMenuItem(deleteItem);// 添加一个按钮到右侧侧菜单。
-
                 SwipeMenuItem closeItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
-                    R.drawable.selector_purple).setImage(R.drawable.ic_action_close).setWidth(width).setHeight(height);
-                swipeRightMenu.addMenuItem(closeItem); // 添加一个按钮到右侧菜单。
+                        R.drawable.selector_purple)
+                        //.setImage(R.drawable.ic_action_close)
+                        .setText("修改")
+                        .setWidth(width).setHeight(height);
+                swipeRightMenu.addMenuItem(closeItem);// 添加一个按钮到右侧侧菜单。
+
+                SwipeMenuItem deleteItem = new SwipeMenuItem(BaseDragActivity.this).setBackground(
+                        R.drawable.selector_red)
+                        //.setImage(R.drawable.ic_action_delete)
+                        .setText("删除")
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height);
+                swipeRightMenu.addMenuItem(deleteItem); // 添加一个按钮到右侧菜单。
             }
         }
     };
@@ -148,12 +151,10 @@ public abstract class BaseDragActivity extends BaseActivity {
             int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
 
+            //右边菜单两个按钮的事件
             if (direction == SwipeRecyclerView.RIGHT_DIRECTION) {
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 if (menuPosition == 0){
-                    Utils.dbDelItem(position);
-                    Utils.dbETSearch(tempNewtext);
-                }else{
                     mDataList = Utils.getmDataList(); //每次滑动菜单修改传值前先更新mDatalist
                     Intent intent = new Intent();
                     intent.setClass(BaseDragActivity.this,EditActivity.class);
@@ -177,12 +178,20 @@ public abstract class BaseDragActivity extends BaseActivity {
                     intent.putExtra("time",time);
                     intent.putExtra("supplier",supplier);
                     startActivity(intent);
+                }else{
+                    Utils.dbDelItem(position);
+                    Utils.dbETSearch(tempNewtext);
                 }
             }
-//            else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
-//                Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT)
-//                    .show();
-//           }
+            //左边菜单的按钮事件
+            else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
+                dbCopyItem(position);
+                Utils.dbETSearch(tempNewtext);
+                mDataList = Utils.getmDataList();
+                //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
+                Log.i("zunxxx","复制按钮点击事件："+mDataList);
+
+           }
         }
     };
 

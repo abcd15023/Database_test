@@ -43,10 +43,7 @@ public class EditActivity extends AppCompatActivity {
                         etUpdateSizePlus.getText().toString(), etUpdateSellingPrice.getText().toString(), etUpdatePurchasingPrice.getText().toString(),
                         etUpdateTime.getText().toString(), etUpdateSupplier.getText().toString());
                 onBackPressed(); //调用系统返回方法，效果如同返回键，不带刷新
-                Log.i("zune","BaseActivity.tempNewtext："+BaseActivity.tempNewtext);
-//                if(BaseActivity.tempNewtext != null){
-//                    Utils.dbETSearch(BaseActivity.tempNewtext); //返回到上一界面后再调用一次搜索更新list
-//                }
+                Utils.dbETSearch(BaseActivity.tempNewtext); //返回到上一界面后再调用一次搜索刷新list
             }
         });
     }

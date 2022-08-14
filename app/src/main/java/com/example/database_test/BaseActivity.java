@@ -117,6 +117,8 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         Utils utils = new Utils(db, mDataList, mAdapter);
         utils.dbNullReplace();
 
+        Utils.getdbMaxId();
+
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,7 +207,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                     mDataList = Utils.mDataList; //用了Utils的搜索方法，也要把BaseActivity的mDataList更新一下
                 }else{
                     //搜索框为空则清空mDataList
-                    tempNewtext = null;
+                    tempNewtext = null; //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
                     mDataList.clear();
                     mAdapter.notifyDataSetChanged(mDataList);
                 }
@@ -219,6 +221,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 startActivity(intent);
             }
         });
+    }
+
+    public List<nianhui_info> getmDataList() {
+        return mDataList;
+    }
+
+    public void setmDataList(List<nianhui_info> mDataList) {
+        this.mDataList = mDataList;
     }
 
     protected int getContentView() {
@@ -333,6 +343,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         //把拖拽排好序的mDataList插入数据库中
         Log.i("zun", "删除数据表");
         ContentValues values = new ContentValues();
+        Log.i("zunxxx","DragChangeDb："+mDataList.toString());
         for (nianhui_info nhi : mDataList) {
             values.put("id", nhi.getId());
             values.put("remark", nhi.getRemark());
@@ -344,14 +355,31 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
             values.put("time", nhi.getTime());
             values.put("supplier", nhi.getSupplier());
             db.insert("nianhui", null, values);
-        }Log.i("zunl","DragChangeDb："+mDataList.toString());
+        }
     }
     //与拖拽item配套的删除 mDatalist对应数据表行的方法
     public void delDragList(){
         for(int i = 0; i < mDataList.size(); i++){
             String str = String.valueOf(mDataList.get(i).getId());
             db.delete("nianhui", "id=?", new String[]{str});
-        }Log.i("zunl","delDragList："+mDataList.toString());
+        }Log.i("zunxxx","delDragList："+mDataList.toString());
+    }
+    //滑动菜单的复制功能，从拖动得到的Position来删除对应SQL数据库id的单条数据
+    public void dbCopyItem(int position){
+        mDataList = Utils.getmDataList();
+        int id = Utils.getdbMaxId()+1;
+        String remark = String.valueOf(mDataList.get(position).getRemark());//通过Position得到item在数据库的remark
+        String name = String.valueOf(mDataList.get(position).getName());
+        String size = String.valueOf(mDataList.get(position).getSize());
+        String sizePlus = String.valueOf(mDataList.get(position).getSizePlus());
+        String sellingPrice = String.valueOf(mDataList.get(position).getSellingPrice());
+        String purchasingPrice = String.valueOf(mDataList.get(position).getPurchasingPrice());
+        String time = String.valueOf(mDataList.get(position).getTime());
+        String supplier = String.valueOf(mDataList.get(position).getSupplier());
+
+        Utils.dbInsert(id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier);
+        //mDataList = Utils.getmDataList();
+        Log.i("zunxxx","BaseActivity.dbCopyItem()："+mDataList);
     }
 //    //滑动菜单的删除功能，从拖动得到的Position来删除对应SQL数据库id的单条数据
 //    public void dbDelItem(int position){

@@ -3,30 +3,29 @@ package com.example.database_test;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class AddActivity extends AppCompatActivity {
-
     EditText etAddRemark,etAddName,etAddSize,etAddSizePlus,etAddSellingPrice,etAddPurchasingPrice,etAddTime,etAddSupplier;
     Button btnuAdd;
-    String id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         initView();
+        int id = Utils.getdbMaxId()+1;
 
         btnuAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.dbInsert(etAddRemark.getText().toString(), etAddName.getText().toString(), etAddSize.getText().toString(),
+                Utils.dbInsert(id, etAddRemark.getText().toString(), etAddName.getText().toString(), etAddSize.getText().toString(),
                         etAddSizePlus.getText().toString(), etAddSellingPrice.getText().toString(), etAddPurchasingPrice.getText().toString(),
                         etAddTime.getText().toString(), etAddSupplier.getText().toString());
                 onBackPressed(); //调用系统返回方法，效果如同返回键，不带刷新
-                //Utils.dbETSearch(BaseActivity.tempNewtext); //返回到上一界面后再调用一次搜索更新list
                 if(BaseActivity.tempNewtext != null){
                     Utils.dbETSearch(BaseActivity.tempNewtext); //返回到上一界面后再调用一次搜索更新list
                 }

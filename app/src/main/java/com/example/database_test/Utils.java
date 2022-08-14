@@ -20,6 +20,7 @@ public class Utils {
     public static String and;
     public static String ands = "";
     public static String sql;
+    public static int maxid,m;
 
     public Utils(SQLiteDatabase db, List<nianhui_info> mDataList,BaseAdapter mAdapter) {
         this.db = db;
@@ -28,10 +29,10 @@ public class Utils {
     }
 
     //SQL数据库 插入数据
-    public static void dbInsert( String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
+    public static void dbInsert(int id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
         //创建存放数据的ContentValues对象
         ContentValues values = new ContentValues();
-
+        values.put("id",id);
         values.put("remark",remark);
         values.put("name",name); //给键名/列名name赋予键值
         values.put("size",size);
@@ -43,6 +44,23 @@ public class Utils {
 
         //数据库执行插入命令至表nianhui
         db.insert("nianhui", null, values);
+        Log.i("zunxxx","Utils.dbInsert()："+mDataList);
+    }
+    //获得数据库id列的最大值，用于新增数据时设置非自增非主键的id为最大值+1
+    public static int getdbMaxId(){
+        Cursor cursor;
+        //sql = "select max(id) from nianhui";
+        sql = "SELECT MAX(id) AS idd FROM nianhui";
+        //创建游标对象
+        cursor = db.rawQuery(sql, null);
+        while(cursor.moveToNext()){
+            int index = cursor.getColumnIndex("idd");
+            maxid = cursor.getInt(index);
+        }
+        // 关闭游标，释放资源
+        cursor.close();
+        Log.i("zunmax","maxid："+maxid);
+        return maxid;
     }
     //拖拽item直接改动数据库
     public static void DragChangeDb(List<nianhui_info> mDataList) {
@@ -75,6 +93,7 @@ public class Utils {
         db.delete("nianhui", "id=?", new String[]{str});
         Log.i("zun","str"+str);
     }
+
 
     //SQL数据库 修改/更新数据
     public static void dbUpdate(String id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
@@ -178,6 +197,7 @@ public class Utils {
         }
         mDataList = mDataList2;
         setmDataList(mDataList);
+        Log.i("zunxxx","Utils.dbETSearch()mDataList2："+mDataList2.toString());
         mAdapter.notifyDataSetChanged(mDataList);
         // 关闭游标，释放资源
         cursor.close();
