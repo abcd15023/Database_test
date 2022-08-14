@@ -36,6 +36,7 @@ import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import com.yanzhenjie.recyclerview.touch.OnItemMoveListener;
 import com.yanzhenjie.recyclerview.touch.OnItemStateChangedListener;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -188,6 +189,12 @@ public abstract class BaseDragActivity extends BaseActivity {
                 dbCopyItem(position);
                 Utils.dbETSearch(tempNewtext);
                 mDataList = Utils.getmDataList();
+
+                Collections.swap(mDataList, mDataList.size()-1, position+1);
+                mAdapter.notifyItemMoved(mDataList.size()-1, position+1);
+                delDragList();
+                DragChangeDb();
+
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 Log.i("zunxxx","复制按钮点击事件："+mDataList);
 
