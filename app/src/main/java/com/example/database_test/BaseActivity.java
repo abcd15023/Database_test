@@ -374,7 +374,8 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         String sizePlus = String.valueOf(mDataList.get(position).getSizePlus());
         String sellingPrice = String.valueOf(mDataList.get(position).getSellingPrice());
         String purchasingPrice = String.valueOf(mDataList.get(position).getPurchasingPrice());
-        String time = String.valueOf(mDataList.get(position).getTime());
+        //String time = String.valueOf(mDataList.get(position).getTime());
+        String time = Utils.getTime();
         String supplier = String.valueOf(mDataList.get(position).getSupplier());
 
         Utils.dbInsert(id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier);
