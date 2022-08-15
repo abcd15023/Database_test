@@ -28,6 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,11 +66,15 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     protected List<nianhui_info> mDataList;
     protected List<nianhui_info> mDataList2;
 
-    EditText etSearchName;
+    EditText etFastSearch, etGlobalSearch;
     Button btnadd;
-    TextView bottom_globalSearch, bottom_bearingSearch;
     SQLiteDatabase db;
-    public static String tempNewtext;
+    ImageView img_down,img_clear1,img_clear2;
+    LinearLayout ll;
+    public static boolean s1,s2;
+    public static boolean down = true;
+    public static String tempSql;
+    public static String tempSql2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +117,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         Utils.getdbMaxId();
 
         //搜索框文本输入监听事件
-        etSearchName.addTextChangedListener(new TextWatcher() {
+        etFastSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 Log.i("zunet", "beforeTextChanged: charSequence=" + s + ", start=" + start + ", count=" + count + ", after=" + after);
@@ -126,14 +132,87 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
             public void afterTextChanged(Editable s) {
                 Log.i("zunet", "afterTextChanged: editable=" + s);
                 String newText = String.valueOf(s);
-                tempNewtext = newText; //用于滑动菜单删除时更新列表，需要这个全局变量
+                tempSql = Utils.getSql(newText); //用于滑动菜单删除时更新列表，需要这个全局变量
                 if(!newText.trim().isEmpty()){
                     //如果字符串去掉前后空格不为空 则调用搜索
-                    utils.dbETSearch(newText);
+                    utils.dbETSearch(Utils.getSql(newText));
                     mDataList = Utils.mDataList; //用了Utils的搜索方法，也要把BaseActivity的mDataList更新一下
                 }else{
                     //搜索框为空则清空mDataList
-                    tempNewtext = null; //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
+                    tempSql = Utils.getSql(""); //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
+                    mDataList.clear();
+                    mAdapter.notifyDataSetChanged(mDataList);
+                }
+            }
+        });
+        etFastSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    s1 = true; //全局变量s1,s2是给其他Activity判断2个搜索框哪个在焦点上
+                    s2 = false;
+                    //如果快速搜索框在焦点上，则隐藏全局搜索框
+                    ll.setVisibility(View.GONE);
+                    //img_down.setImageResource(R.drawable.down55);
+                    down = true;
+                    etGlobalSearch.setText("");
+                    mDataList.clear();
+                    mAdapter.notifyDataSetChanged(mDataList);
+                    Log.i("zunet", "down3"+down);
+                }
+            }
+        });
+        etGlobalSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    s1 = false; //全局变量s1,s2是给其他Activity判断2个搜索框哪个在焦点上
+                    s2 = true;
+                }
+            }
+        });
+        img_down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(down){
+                    ll.setVisibility(View.VISIBLE);
+                    img_down.setImageResource(R.drawable.down55);
+                    down = false; //down是单独用来判断下拉搜索框的开合，没有焦点时也要能开合下拉搜索框，所以得启用down这个变量判断
+                    etFastSearch.setText("");
+                    mDataList.clear();
+                    mAdapter.notifyDataSetChanged(mDataList);
+                    Log.i("zunet", "down2"+down);
+                }else{
+                    ll.setVisibility(View.GONE);
+                    img_down.setImageResource(R.drawable.down5);
+                    down = true;
+                    etGlobalSearch.setText("");
+                    mDataList.clear();
+                    mAdapter.notifyDataSetChanged(mDataList);
+                    Log.i("zunet", "down3"+down);
+                }
+            }
+        });
+        etGlobalSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String newText = String.valueOf(s);
+                tempSql2 = Utils.getSql2(newText); //用于滑动菜单删除时更新列表，需要这个全局变量
+                if(!newText.trim().isEmpty()){
+                    //如果字符串去掉前后空格不为空 则调用搜索
+                    utils.dbETSearch(Utils.getSql2(newText));
+                    mDataList = Utils.mDataList; //用了Utils的搜索方法，也要把BaseActivity的mDataList更新一下
+                }else{
+                    //搜索框为空则清空mDataList
+                    tempSql2 = Utils.getSql2(""); //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
                     mDataList.clear();
                     mAdapter.notifyDataSetChanged(mDataList);
                 }
@@ -147,16 +226,16 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 startActivity(intent);
             }
         });
-        bottom_globalSearch.setOnClickListener(new View.OnClickListener() {
+        img_clear1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BaseActivity.this, "全局搜索", Toast.LENGTH_SHORT).show();
+                etFastSearch.setText("");
             }
         });
-        bottom_bearingSearch.setOnClickListener(new View.OnClickListener() {
+        img_clear2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BaseActivity.this, "轴承搜索", Toast.LENGTH_SHORT).show();
+                etGlobalSearch.setText("");
             }
         });
     }
@@ -239,10 +318,13 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         return true;
     }
     public void initView(){
-        etSearchName = findViewById(R.id.etSearchName);
+        etFastSearch = findViewById(R.id.etSearchName);
+        etGlobalSearch = findViewById(R.id.etGlobalSearch);
         btnadd = findViewById(R.id.btnadd);
-        bottom_globalSearch = findViewById(R.id.bottom_globalSearch);
-        bottom_bearingSearch = findViewById(R.id.bottom_bearingSearch);
+        img_down = findViewById(R.id.img_down);
+        img_clear1 = findViewById(R.id.img_clear1);
+        img_clear2 = findViewById(R.id.img_clear2);
+        ll = findViewById(R.id.L1);
     }
 
     //初始化SQL数据库
@@ -251,18 +333,6 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         DatabaseHelper dbHelper = new DatabaseHelper(this, "nianhui",null,1);
         db = dbHelper.getWritableDatabase();
     }
-    //SQL数据库 插入数据
-//    public void dbInsert(){
-//        gettext1 = et1.getText().toString();
-//        gettext11 = et11.getText().toString();
-//        //创建存放数据的ContentValues对象
-//        ContentValues values = new ContentValues();
-//        values.put("name",gettext1); //给键名/列名name赋予键值
-//        values.put("size",gettext11); //给键名/列名size赋予键值
-//
-//        //数据库执行插入命令至表nianhui
-//        db.insert("nianhui", null, values);
-//    }
     //拖拽item直接改动数据库
     public void DragChangeDb() {
         //把拖拽排好序的mDataList插入数据库中
@@ -299,41 +369,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         String sizePlus = String.valueOf(mDataList.get(position).getSizePlus());
         String sellingPrice = String.valueOf(mDataList.get(position).getSellingPrice());
         String purchasingPrice = String.valueOf(mDataList.get(position).getPurchasingPrice());
-        String time = String.valueOf(mDataList.get(position).getTime());
+        //String time = String.valueOf(mDataList.get(position).getTime());
+        String time = Utils.getTime();
         String supplier = String.valueOf(mDataList.get(position).getSupplier());
 
         Utils.dbInsert(id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier);
         //mDataList = Utils.getmDataList();
         Log.i("zunxxx","BaseActivity.dbCopyItem()："+mDataList);
     }
-//    //滑动菜单的删除功能，从拖动得到的Position来删除对应SQL数据库id的单条数据
-//    public void dbDelItem(int position){
-//        String str = String.valueOf(mDataList.get(position).getId());//通过Position得到item在数据库的主键id
-//        db.delete("nianhui", "id=?", new String[]{str});
-//        Log.i("zun","str"+str);
-//    }
-//    //SQL数据库 修改/更新数据
-//    public void dbUpdate(int id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier){
-////        gettext2 = et2.getText().toString();
-////        gettext22 = et22.getText().toString();
-////        gettext222 = et222.getText().toString();
-//        ContentValues values2 = new ContentValues();
-//        values2.put("id",id);
-//        values2.put("remark",remark);
-//        values2.put("name",name);
-//        values2.put("size",size);
-//        values2.put("sizePlus",sizePlus);
-//        values2.put("sellingPrice",sellingPrice);
-//        values2.put("purchasingPrice",purchasingPrice);
-//        values2.put("time",time);
-//        values2.put("supplier",supplier);
-//        db.update("nianhui", values2, "id = ?", new String[]{String.valueOf(id)});
-//    }
-//    //SQL数据库 删除数据
-//    public void dbDelSingle(){
-//        gettext3 = et3.getText().toString();
-//        db.delete("nianhui", "id=?", new String[]{gettext3});
-//    }
     //SQL数据库 遍历数据，无筛选全展示
     public void dbSearch(){
         Cursor cursor;
@@ -369,80 +412,4 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         // 关闭游标，释放资源
         cursor.close();
     }
-//    public void dbNullReplace(){
-//        //使用上述如||的多字段搜索sql语句时，有Null的字段会导致整行不予显示，所以先用sql语句把3个字段下的Null替换为“”
-//        db.execSQL("UPDATE nianhui SET name = '' WHERE name IS NULL");
-//        db.execSQL("UPDATE nianhui SET size = '' WHERE size IS NULL");
-//        db.execSQL("UPDATE nianhui SET sizePlus = '' WHERE sizePlus IS NULL");
-//        db.execSQL("UPDATE nianhui SET remark = '' WHERE remark IS NULL");
-//    }
-//    //搜索框的数据库查询
-//    public void dbETSearch(String newText){
-//        Cursor cursor;
-//        Log.i("zun","dbETSearch()");
-//        //使用上述如||的多字段搜索sql语句时，有Null的字段会导致整行不予显示，所以先用sql语句把3个字段下的Null替换为“”
-////        db.execSQL("UPDATE nianhui SET name = '' WHERE name IS NULL");
-////        db.execSQL("UPDATE nianhui SET size = '' WHERE size IS NULL");
-////        db.execSQL("UPDATE nianhui SET sizePlus = '' WHERE sizePlus IS NULL");
-//        sql = getSql(newText);
-//        //创建游标对象
-//        cursor = db.rawQuery(sql, null);
-//        ands = ""; //在每一次搜索后清空 and 累加，避免下次查询失败
-//
-//        mDataList2 = new ArrayList<>();
-//        while(cursor.moveToNext()){
-//            int temp_id = cursor.getColumnIndex("id");
-//            int temp_remark = cursor.getColumnIndex("remark");
-//            int temp_name = cursor.getColumnIndex("name");
-//            int temp_size= cursor.getColumnIndex("size");
-//            int temp_sizePlus = cursor.getColumnIndex("sizePlus");
-//            int temp_sellingPrice = cursor.getColumnIndex("sellingPrice");
-//            int temp_purchasingPrice = cursor.getColumnIndex("purchasingPrice");
-//            int temp_time = cursor.getColumnIndex("time");
-//            int temp_supplier = cursor.getColumnIndex("supplier");
-//            int id = cursor.getInt(temp_id);
-//            String name = cursor.getString(temp_name);
-//            String remark = cursor.getString(temp_remark);
-//            String size = cursor.getString(temp_size);
-//            String sizePlus = cursor.getString(temp_sizePlus);
-//            String sellingPrice = cursor.getString(temp_sellingPrice);
-//            String purchasingPrice = cursor.getString(temp_purchasingPrice);
-//            String supplier = cursor.getString(temp_supplier);
-//            String time = cursor.getString(temp_time);
-//            nianhui_info nh = new nianhui_info(id,remark,name,size,sizePlus,sellingPrice,purchasingPrice,time,supplier);
-//            mDataList2.add(nh);
-//        }
-//        mDataList = mDataList2;
-//        mAdapter.notifyDataSetChanged(mDataList);
-//        // 关闭游标，释放资源
-//        cursor.close();
-//    }
-//    //生成sql语句
-//    public String getSql(String newText){
-//        //把搜索框输入字符串 split("\\s+")去空格，分隔得到关键字并生成数组，但是首空格无法去掉，trim()可去前后空格作为补充
-//        String[] arr = newText.trim().split("\\s+");
-//        if(arr.length == 1){ //只有1个关键字时
-//            String sql1 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'";
-//            return sql1;
-//        }else{  //不止1个关键字时
-//            for (int i = 1; i < arr.length; i++) {
-//                Log.i("zunn","arr.length："+arr.length);
-//                and = getAnd(arr[i].trim()); //arr从索引1开始
-//            }
-//            String sql2 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'"+and;
-//            return sql2;
-//        }
-//    }
-//    //给多关键字加and语句
-//    public String getAnd(String s) {
-//        andd = "and (name||''||size||''||sizePlus) like '%"+s+"%'";
-//        ands = ands + andd;
-//        Log.i("zunn","getAnd:"+ands);
-//        return ands;
-//    }
-//    //删除数据表(不删除表结构)，并且主键重新从1开始
-//    public void deldb(){
-//        db.execSQL("delete from nianhui");
-//        db.execSQL("update sqlite_sequence set seq=0 where name='nianhui'");
-//    }
 }

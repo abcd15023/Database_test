@@ -181,19 +181,31 @@ public abstract class BaseDragActivity extends BaseActivity {
                     startActivity(intent);
                 }else{
                     Utils.dbDelItem(position);
-                    Utils.dbETSearch(tempNewtext);
+                    if(BaseActivity.s1){
+                        Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
+                        Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
+                    }else if(BaseActivity.s2){
+                        Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
+                        Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
+                    }
                 }
             }
             //左边菜单的按钮事件
             else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
                 dbCopyItem(position);
-                Utils.dbETSearch(tempNewtext);
+                if(BaseActivity.s1){
+                    Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
+                    Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
+                }else if(BaseActivity.s2){
+                    Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
+                    Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
+                }
                 mDataList = Utils.getmDataList();
-
+                //复制项先是插在底部，位置是mDataList.size()-1，为了使其插在被复制项的下一行 position+1 ，等于是照搬拖拽排序的方法
                 Collections.swap(mDataList, mDataList.size()-1, position+1);
                 mAdapter.notifyItemMoved(mDataList.size()-1, position+1);
-                delDragList();
-                DragChangeDb();
+                delDragList();  //删除老表
+                DragChangeDb(); //插入新表
 
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 Log.i("zunxxx","复制按钮点击事件："+mDataList);

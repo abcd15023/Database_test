@@ -15,7 +15,7 @@ import java.util.List;
 public class EditActivity extends AppCompatActivity {
 
     EditText etUpdateRemark,etUpdateName,etUpdateSize,etUpdateSizePlus,etUpdateSellingPrice,etUpdatePurchasingPrice,etUpdateTime,etUpdateSupplier;
-    Button btnupdate;
+    Button btnupdate,btngettime;
     String id, remark, name, size, sizePlus, sellingPrice, purchasingPrice, time, supplier;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,20 @@ public class EditActivity extends AppCompatActivity {
                         etUpdateSizePlus.getText().toString(), etUpdateSellingPrice.getText().toString(), etUpdatePurchasingPrice.getText().toString(),
                         etUpdateTime.getText().toString(), etUpdateSupplier.getText().toString());
                 onBackPressed(); //调用系统返回方法，效果如同返回键，不带刷新
-                Utils.dbETSearch(BaseActivity.tempNewtext); //返回到上一界面后再调用一次搜索刷新list
+                if(BaseActivity.s1){
+                    Toast.makeText(EditActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
+                    Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
+                }else if(BaseActivity.s2){
+                    Toast.makeText(EditActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
+                    Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
+                }
+
+            }
+        });
+        btngettime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etUpdateTime.setText(Utils.getTime());
             }
         });
     }
@@ -64,6 +77,7 @@ public class EditActivity extends AppCompatActivity {
         etUpdateTime = findViewById(R.id.ETUpdateTime);
         etUpdateSupplier = findViewById(R.id.ETUpdateSupplier);
         btnupdate = findViewById(R.id.btnUpdate);
+        btngettime = findViewById(R.id.btn_getTime);
     }
     //把传过来的值赋值到各个EditText中
     public void setIntentText(){

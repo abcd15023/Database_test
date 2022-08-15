@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,14 +162,14 @@ public class Utils {
         db.execSQL("UPDATE nianhui SET remark = '' WHERE remark IS NULL");
     }
     //搜索框的数据库查询
-    public static void dbETSearch(String newText){
+    public static void dbETSearch(String sql){
         Cursor cursor;
         Log.i("zun","dbETSearch()");
         //使用上述如||的多字段搜索sql语句时，有Null的字段会导致整行不予显示，所以先用sql语句把3个字段下的Null替换为“”
 //        db.execSQL("UPDATE nianhui SET name = '' WHERE name IS NULL");
 //        db.execSQL("UPDATE nianhui SET size = '' WHERE size IS NULL");
 //        db.execSQL("UPDATE nianhui SET sizePlus = '' WHERE sizePlus IS NULL");
-        sql = getSql(newText);
+        //sql = getSql(newText);
         //创建游标对象
         cursor = db.rawQuery(sql, null);
         ands = ""; //在每一次搜索后清空 and 累加，避免下次查询失败
@@ -216,6 +218,22 @@ public class Utils {
         //把搜索框输入字符串 split("\\s+")去空格，分隔得到关键字并生成数组，但是首空格无法去掉，trim()可去前后空格作为补充
         String[] arr = newText.trim().split("\\s+");
         if(arr.length == 1){ //只有1个关键字时
+            String sql1 = "select * from (select * from nianhui where (name||''||size||''||sizePlus) like '%"+arr[0]+"%' order by time ASC) group by name,size,sizePlus";
+            return sql1;
+        }else{  //不止1个关键字时
+            for (int i = 1; i < arr.length; i++) {
+                Log.i("zunn","arr.length："+arr.length);
+                and = getAnd(arr[i].trim()); //arr从索引1开始
+            }
+            String sql2 = "select * from (select * from nianhui where (name||''||size||''||sizePlus) like '%"+arr[0]+"%' "+and+" order by time ASC) group by name,size,sizePlus";
+            return sql2;
+        }
+    }
+    //生成sql语句
+    public static String getSql2(String newText){
+        //把搜索框输入字符串 split("\\s+")去空格，分隔得到关键字并生成数组，但是首空格无法去掉，trim()可去前后空格作为补充
+        String[] arr = newText.trim().split("\\s+");
+        if(arr.length == 1){ //只有1个关键字时
             String sql1 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'";
             return sql1;
         }else{  //不止1个关键字时
@@ -238,5 +256,11 @@ public class Utils {
     public static void deldb(){
         db.execSQL("delete from nianhui");
         db.execSQL("update sqlite_sequence set seq=0 where name='nianhui'");
+    }
+    //获取系统时间，并格式化为String
+    public static String getTime(){
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//注意大小写
+        return sdf.format(date);
     }
 }

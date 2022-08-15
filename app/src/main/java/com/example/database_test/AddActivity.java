@@ -19,6 +19,8 @@ public class AddActivity extends AppCompatActivity {
         initView();
         int id = Utils.getdbMaxId()+1;
 
+        etAddTime.setText(Utils.getTime()); //在增加商品时给time EditText自动补上系统时间
+
         btnuAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -26,9 +28,7 @@ public class AddActivity extends AppCompatActivity {
                         etAddSizePlus.getText().toString(), etAddSellingPrice.getText().toString(), etAddPurchasingPrice.getText().toString(),
                         etAddTime.getText().toString(), etAddSupplier.getText().toString());
                 onBackPressed(); //调用系统返回方法，效果如同返回键，不带刷新
-                if(BaseActivity.tempNewtext != null){
-                    Utils.dbETSearch(BaseActivity.tempNewtext); //返回到上一界面后再调用一次搜索更新list
-                }
+                Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
             }
         });
     }
