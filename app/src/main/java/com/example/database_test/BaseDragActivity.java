@@ -55,7 +55,7 @@ public abstract class BaseDragActivity extends BaseActivity {
         mRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator); // 菜单创建器。
 
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged(mDataList);
+        //mAdapter.notifyDataSetChanged(mDataList);
 
         mRecyclerView.setOnItemMoveListener(getItemMoveListener());// 监听拖拽和侧滑删除，更新UI和数据源。
         mRecyclerView.setOnItemStateChangedListener(mOnItemStateChangedListener); // 监听Item的手指状态，拖拽、侧滑、松开。
@@ -182,10 +182,10 @@ public abstract class BaseDragActivity extends BaseActivity {
                 }else{
                     Utils.dbDelItem(position);
                     if(BaseActivity.s1){
-                        Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
                         Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
                     }else if(BaseActivity.s2){
-                        Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
                         Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
                     }
                 }
@@ -194,10 +194,10 @@ public abstract class BaseDragActivity extends BaseActivity {
             else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
                 dbCopyItem(position);
                 if(BaseActivity.s1){
-                    Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
                     Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
                 }else if(BaseActivity.s2){
-                    Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
                     Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
                 }
                 mDataList = Utils.getmDataList();

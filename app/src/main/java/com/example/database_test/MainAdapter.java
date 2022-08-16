@@ -67,22 +67,22 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
 //                Toast.makeText(v.getContext(),String.valueOf(nh.getId()),Toast.LENGTH_SHORT).show();
 //            }
 //        });
-        holder.text_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                nianhui_info nh = mDataList.get(position);
-                Toast.makeText(v.getContext(),nh.getName(),Toast.LENGTH_SHORT).show();
-            }
-        });
-        holder.text_purchasingPrice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                nianhui_info nh = mDataList.get(position);
-                Toast.makeText(v.getContext(),nh.getPurchasingPrice(),Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.text_name.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int position = holder.getAdapterPosition();
+//                nianhui_info nh = mDataList.get(position);
+//                Toast.makeText(v.getContext(),nh.getName(),Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        holder.text_purchasingPrice.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int position = holder.getAdapterPosition();
+//                nianhui_info nh = mDataList.get(position);
+//                Toast.makeText(v.getContext(),nh.getPurchasingPrice(),Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         //return new ViewHolder(getInflater().inflate(R.layout.item1, parent, false));
         return holder;

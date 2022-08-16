@@ -66,11 +66,11 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     protected List<nianhui_info> mDataList;
     protected List<nianhui_info> mDataList2;
 
-    EditText etFastSearch, etGlobalSearch;
+    EditText etGlobalSearch;
     Button btnadd;
-    SQLiteDatabase db;
-    ImageView img_down,img_clear1,img_clear2;
     LinearLayout ll;
+    SQLiteDatabase db;
+    ImageView img_clear2;
     public static boolean s1,s2;
     public static boolean down = true;
     public static String tempSql;
@@ -96,12 +96,12 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 
         mLayoutManager = createLayoutManager();
         mItemDecoration = createItemDecoration();
-        mDataList = createDataList();
+        //mDataList = createDataList();
         mAdapter = createAdapter();
 
         //清空mDataList，在搜索前不显示列表
-        mDataList.clear();
-        mAdapter.notifyDataSetChanged(mDataList);
+        //mDataList.clear();
+        //mAdapter.notifyDataSetChanged(mDataList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(mItemDecoration);
@@ -116,83 +116,17 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 
         Utils.getdbMaxId();
 
-        //搜索框文本输入监听事件
-        etFastSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.i("zunet", "beforeTextChanged: charSequence=" + s + ", start=" + start + ", count=" + count + ", after=" + after);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i("zunet", "onTextChanged: charSequence=" + s + ", start=" + start + ", before=" + before + ", count=" + count);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.i("zunet", "afterTextChanged: editable=" + s);
-                String newText = String.valueOf(s);
-                tempSql = Utils.getSql(newText); //用于滑动菜单删除时更新列表，需要这个全局变量
-                if(!newText.trim().isEmpty()){
-                    //如果字符串去掉前后空格不为空 则调用搜索
-                    utils.dbETSearch(Utils.getSql(newText));
-                    mDataList = Utils.mDataList; //用了Utils的搜索方法，也要把BaseActivity的mDataList更新一下
-                }else{
-                    //搜索框为空则清空mDataList
-                    tempSql = Utils.getSql(""); //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
-                    mDataList.clear();
-                    mAdapter.notifyDataSetChanged(mDataList);
-                }
-            }
-        });
-        etFastSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    s1 = true; //全局变量s1,s2是给其他Activity判断2个搜索框哪个在焦点上
-                    s2 = false;
-                    //如果快速搜索框在焦点上，则隐藏全局搜索框
-                    ll.setVisibility(View.GONE);
-                    //img_down.setImageResource(R.drawable.down55);
-                    down = true;
-                    etGlobalSearch.setText("");
-                    mDataList.clear();
-                    mAdapter.notifyDataSetChanged(mDataList);
-                    Log.i("zunet", "down3"+down);
-                }
-            }
-        });
         etGlobalSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     s1 = false; //全局变量s1,s2是给其他Activity判断2个搜索框哪个在焦点上
                     s2 = true;
-                }
-            }
-        });
-        img_down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(down){
-                    ll.setVisibility(View.VISIBLE);
-                    img_down.setImageResource(R.drawable.down55);
-                    down = false; //down是单独用来判断下拉搜索框的开合，没有焦点时也要能开合下拉搜索框，所以得启用down这个变量判断
-                    etFastSearch.setText("");
-                    mDataList.clear();
-                    mAdapter.notifyDataSetChanged(mDataList);
-                    Log.i("zunet", "down2"+down);
-                }else{
                     ll.setVisibility(View.GONE);
-                    img_down.setImageResource(R.drawable.down5);
-                    down = true;
-                    etGlobalSearch.setText("");
-                    mDataList.clear();
-                    mAdapter.notifyDataSetChanged(mDataList);
-                    Log.i("zunet", "down3"+down);
                 }
             }
         });
+
         etGlobalSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -213,8 +147,10 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 }else{
                     //搜索框为空则清空mDataList
                     tempSql2 = Utils.getSql2(""); //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
-                    mDataList.clear();
-                    mAdapter.notifyDataSetChanged(mDataList);
+                    if(mDataList != null){
+                        mDataList.clear();
+                        mAdapter.notifyDataSetChanged(mDataList);
+                    }
                 }
             }
         });
@@ -224,12 +160,6 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 Intent intent = new Intent();
                 intent.setClass(BaseActivity.this,AddActivity.class);
                 startActivity(intent);
-            }
-        });
-        img_clear1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etFastSearch.setText("");
             }
         });
         img_clear2.setOnClickListener(new View.OnClickListener() {
@@ -301,9 +231,9 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         return new MainAdapter(this);
     }
 
-    @Override
+    @Override  //item行的点击事件
     public void onItemClick(View itemView, int position) {
-        Toast.makeText(this, "第" + position + "个", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "第" + position + "个", Toast.LENGTH_SHORT).show();
     }
 
     protected boolean displayHomeAsUpEnabled() {
@@ -318,13 +248,10 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         return true;
     }
     public void initView(){
-        etFastSearch = findViewById(R.id.etSearchName);
         etGlobalSearch = findViewById(R.id.etGlobalSearch);
         btnadd = findViewById(R.id.btnadd);
-        img_down = findViewById(R.id.img_down);
-        img_clear1 = findViewById(R.id.img_clear1);
         img_clear2 = findViewById(R.id.img_clear2);
-        ll = findViewById(R.id.L1);
+        ll = findViewById(R.id.ll);
     }
 
     //初始化SQL数据库
@@ -359,7 +286,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
             db.delete("nianhui", "id=?", new String[]{str});
         }Log.i("zunxxx","delDragList："+mDataList.toString());
     }
-    //滑动菜单的复制功能，从拖动得到的Position来删除对应SQL数据库id的单条数据
+    //滑动菜单的复制功能
     public void dbCopyItem(int position){
         mDataList = Utils.getmDataList();
         int id = Utils.getdbMaxId()+1;

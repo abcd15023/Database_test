@@ -71,6 +71,7 @@ public class DragSwipeListActivity extends BaseDragActivity {
                 // 真实的Position：通过ViewHolder拿到的position都需要减掉HeadView的数量。
                 int fromPosition = srcHolder.getAdapterPosition() - mRecyclerView.getHeaderCount();
                 int toPosition = targetHolder.getAdapterPosition() - mRecyclerView.getHeaderCount();
+                mDataList = Utils.getmDataList();
                 Collections.swap(mDataList, fromPosition, toPosition);
                 mAdapter.notifyItemMoved(fromPosition, toPosition);
                 Log.i("zunxxx","OnItemMoveListener()："+mDataList);

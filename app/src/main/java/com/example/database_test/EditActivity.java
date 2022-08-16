@@ -44,10 +44,10 @@ public class EditActivity extends AppCompatActivity {
                         etUpdateTime.getText().toString(), etUpdateSupplier.getText().toString());
                 onBackPressed(); //调用系统返回方法，效果如同返回键，不带刷新
                 if(BaseActivity.s1){
-                    Toast.makeText(EditActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(EditActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
                     Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
                 }else if(BaseActivity.s2){
-                    Toast.makeText(EditActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(EditActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
                     Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
                 }
 
@@ -61,10 +61,15 @@ public class EditActivity extends AppCompatActivity {
         });
     }
     public String getValue(String str){
-        if(getIntent().getStringExtra(str).equals("")){
+        if(getIntent().getStringExtra(str).equals("") || getIntent().getStringExtra(str).isEmpty()){
             return ""; //如不做判断，空值将显示为字符串“Null”
         }else{
-            return getIntent().getStringExtra(str);
+            if(getIntent().getStringExtra(str).equals("null")){
+                return "";
+            }else{
+                return getIntent().getStringExtra(str);
+            }
+
         }
     }
     public void initView(){
