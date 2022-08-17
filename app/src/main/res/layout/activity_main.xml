@@ -45,7 +45,7 @@
             android:id="@+id/etGlobalSearch"
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:hint="输入名称 / 规格  全局搜索"
+            android:hint="输入名称/规格"
             android:textColorHint="#D9D9D9"
             android:textSize="20sp"
             android:layout_weight="1"/>
@@ -61,6 +61,23 @@
             android:layout_height="wrap_content"
             android:text="新增"
             android:theme="@style/BlueButtonStyle"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+    <Button
+        android:id="@+id/btn_import"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="导入"
+        android:theme="@style/BlueButtonStyle"/>
+    <Button
+        android:id="@+id/btn_export"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="导出"
+        android:theme="@style/BlueButtonStyle"/>
     </LinearLayout>
 
     <LinearLayout

@@ -15,11 +15,13 @@
  */
 package com.example.database_test;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -37,10 +39,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ajts.androidmads.library.ExcelToSQLite;
+import com.ajts.androidmads.library.SQLiteToExcel;
 import com.example.database_test.BaseAdapter;
 import com.example.database_test.MainAdapter;
 import com.yanzhenjie.recyclerview.OnItemClickListener;
@@ -49,6 +54,7 @@ import com.yanzhenjie.recyclerview.widget.DefaultItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,6 +74,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
 
     EditText etGlobalSearch;
     Button btnadd;
+    Button btn_import,btn_export;
     LinearLayout ll;
     SQLiteDatabase db;
     ImageView img_clear2;
@@ -76,8 +83,14 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     public static String tempSql;
     public static String tempSql2;
 
+    //定义SD的根路径
+    public static final String Root = Environment.getExternalStorageDirectory().getAbsolutePath();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //在程序中动态获取写入权限，此操作将向系统索要权限，系统敏感权限有弹窗
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         super.onCreate(savedInstanceState);
         setContentView(getContentView());
 
@@ -168,6 +181,18 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 etGlobalSearch.setText("");
             }
         });
+        btn_import.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                excelToDb();
+            }
+        });
+        btn_export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbToExcel(); //导出数据库为excel表
+            }
+        });
     }
 
     public List<nianhui_info> getmDataList() {
@@ -252,6 +277,8 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         btnadd = findViewById(R.id.btnadd);
         img_clear2 = findViewById(R.id.img_clear2);
         ll = findViewById(R.id.ll);
+        btn_import = findViewById(R.id.btn_import);
+        btn_export = findViewById(R.id.btn_export);
     }
 
     //初始化SQL数据库
@@ -338,5 +365,62 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         mAdapter.notifyDataSetChanged(mDataList);
         // 关闭游标，释放资源
         cursor.close();
+    }
+
+    /**
+     * 把数据库导出为Excel表
+     */
+    public void dbToExcel(){
+        //导出到默认位置-外置存储根目录
+        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, "nianhui"); //有.db后缀的要加后缀，没有的不用加
+        //导出到指定位置
+        //SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, "helloworld.db", directory_path);
+
+        //导出指定数据库中的单个数据表
+        sqliteToExcel.exportSingleTable("nianhui", "nianhui.xls", new SQLiteToExcel.ExportListener() {
+            @Override
+            public void onStart() {
+            }
+            @Override
+            public void onCompleted(String filePath) {
+                Toast.makeText(BaseActivity.this,"导出成功",Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(BaseActivity.this,"导出失败",Toast.LENGTH_SHORT).show();
+                Log.i("zunex","Exception e："+e.toString());
+            }
+        });
+    }
+
+    /**
+     * 把Excel表导入数据库
+     */
+    public void excelToDb(){
+        //初始化
+        //ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), "helloworld.db");
+        //如果你要先删除表，再导入Excel，使用以下声明方法
+        ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), "nianhui", true);
+
+        //从文件夹中导入-填入绝对路径
+        excelToSQLite.importFromFile(Root + "/nianhui.xls", new ExcelToSQLite.ImportListener() {
+            @Override
+            public void onStart() {
+                //下面的onCompleted()方法没有起作用，故在这里加提示
+                Toast.makeText(BaseActivity.this,"导入成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCompleted(String dbName) {
+                //不知为何，导入成功却没有调用该方法
+                //Toast.makeText(BaseActivity.this,"导入成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(BaseActivity.this,"导入失败",Toast.LENGTH_SHORT).show();
+                Log.i("zunex","Exception e："+e.toString());
+            }
+        });
     }
 }
