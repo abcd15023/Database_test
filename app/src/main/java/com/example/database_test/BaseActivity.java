@@ -80,6 +80,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     public static boolean s1,s2;
     public static String tempSql;
     public static String tempSql2;
+    public static String tempNewText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +150,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 String newText = String.valueOf(s);
                 tempSql2 = Utils.getSql2(newText); //用于滑动菜单删除时更新列表，需要这个全局变量
                 if(!newText.trim().isEmpty()){
+                    tempNewText = newText;
                     //如果字符串去掉前后空格不为空 则调用搜索
                     utils.dbETSearch(Utils.getSql2(newText));
                     mDataList = Utils.mDataList; //用了Utils的搜索方法，也要把BaseActivity的mDataList更新一下
@@ -156,6 +158,7 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                     //搜索框为空则清空mDataList
                     tempSql2 = Utils.getSql2(""); //在搜索框为空时清空tempNewtext,避免别处调用dbETSearch(BaseActivity.tempNewtext)空指针
                     if(mDataList != null){
+                        tempNewText = null;
                         mDataList.clear();
                         mAdapter.notifyDataSetChanged(mDataList);
                     }

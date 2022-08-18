@@ -32,7 +32,7 @@ public class AddActivity extends AppCompatActivity {
                             etAddSizePlus.getText().toString(), etAddSellingPrice.getText().toString(), etAddPurchasingPrice.getText().toString(),
                             etAddTime.getText().toString(), etAddSupplier.getText().toString());
                     onBackPressed(); //调用系统返回方法，效果如同返回键，不带刷新
-                    if(BaseActivity.tempSql2 != null){ //避免无搜索时增加商品返回时报错
+                    if(BaseActivity.tempNewText != null){ //避免无搜索时增加商品返回时报错
                         Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
                     }
                 }
