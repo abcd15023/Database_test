@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,18 +74,12 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     protected List<nianhui_info> mDataList2;
 
     EditText etGlobalSearch;
-    Button btnadd;
-    Button btn_import,btn_export;
     LinearLayout ll;
     SQLiteDatabase db;
-    ImageView img_clear2;
+    ImageView img_clear,img_add;
     public static boolean s1,s2;
-    public static boolean down = true;
     public static String tempSql;
     public static String tempSql2;
-
-    //定义SD的根路径
-    public static final String Root = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,30 +162,18 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
                 }
             }
         });
-        btnadd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(BaseActivity.this,AddActivity.class);
-                startActivity(intent);
-            }
-        });
-        img_clear2.setOnClickListener(new View.OnClickListener() {
+        img_clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 etGlobalSearch.setText("");
             }
         });
-        btn_import.setOnClickListener(new View.OnClickListener() {
+        img_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                excelToDb();
-            }
-        });
-        btn_export.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dbToExcel(); //导出数据库为excel表
+                //自定义下拉弹出窗口
+                PopMain pop = new PopMain(BaseActivity.this);
+                pop.showPopupWindow(img_add);
             }
         });
     }
@@ -274,11 +257,9 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
     }
     public void initView(){
         etGlobalSearch = findViewById(R.id.etGlobalSearch);
-        btnadd = findViewById(R.id.btnadd);
-        img_clear2 = findViewById(R.id.img_clear2);
+        img_clear = findViewById(R.id.img_clear);
+        img_add = findViewById(R.id.img_add);
         ll = findViewById(R.id.ll);
-        btn_import = findViewById(R.id.btn_import);
-        btn_export = findViewById(R.id.btn_export);
     }
 
     //初始化SQL数据库
@@ -365,62 +346,5 @@ public class BaseActivity extends AppCompatActivity implements OnItemClickListen
         mAdapter.notifyDataSetChanged(mDataList);
         // 关闭游标，释放资源
         cursor.close();
-    }
-
-    /**
-     * 把数据库导出为Excel表
-     */
-    public void dbToExcel(){
-        //导出到默认位置-外置存储根目录
-        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, "nianhui"); //有.db后缀的要加后缀，没有的不用加
-        //导出到指定位置
-        //SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, "helloworld.db", directory_path);
-
-        //导出指定数据库中的单个数据表
-        sqliteToExcel.exportSingleTable("nianhui", "nianhui.xls", new SQLiteToExcel.ExportListener() {
-            @Override
-            public void onStart() {
-            }
-            @Override
-            public void onCompleted(String filePath) {
-                Toast.makeText(BaseActivity.this,"导出成功",Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(BaseActivity.this,"导出失败",Toast.LENGTH_SHORT).show();
-                Log.i("zunex","Exception e："+e.toString());
-            }
-        });
-    }
-
-    /**
-     * 把Excel表导入数据库
-     */
-    public void excelToDb(){
-        //初始化
-        //ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), "helloworld.db");
-        //如果你要先删除表，再导入Excel，使用以下声明方法
-        ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), "nianhui", true);
-
-        //从文件夹中导入-填入绝对路径
-        excelToSQLite.importFromFile(Root + "/nianhui.xls", new ExcelToSQLite.ImportListener() {
-            @Override
-            public void onStart() {
-                //下面的onCompleted()方法没有起作用，故在这里加提示
-                Toast.makeText(BaseActivity.this,"导入成功",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCompleted(String dbName) {
-                //不知为何，导入成功却没有调用该方法
-                //Toast.makeText(BaseActivity.this,"导入成功",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(BaseActivity.this,"导入失败",Toast.LENGTH_SHORT).show();
-                Log.i("zunex","Exception e："+e.toString());
-            }
-        });
     }
 }

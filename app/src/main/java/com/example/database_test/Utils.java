@@ -4,8 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.ajts.androidmads.library.ExcelToSQLite;
+import com.ajts.androidmads.library.SQLiteToExcel;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -23,6 +27,9 @@ public class Utils {
     public static String ands = "";
     public static String sql;
     public static int maxid,m;
+
+    //定义SD的根路径
+    public static final String Root = Environment.getExternalStorageDirectory().getAbsolutePath();
 
     public Utils(SQLiteDatabase db, List<nianhui_info> mDataList,BaseAdapter mAdapter) {
         this.db = db;
@@ -263,5 +270,60 @@ public class Utils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//注意大小写
         return sdf.format(date);
     }
+    /**
+     * 把数据库导出为Excel表
+     */
+    public static void dbToExcel(Context context){
+        //导出到默认位置-外置存储根目录
+        SQLiteToExcel sqliteToExcel = new SQLiteToExcel(context, "nianhui"); //有.db后缀的要加后缀，没有的不用加
+        //导出到指定位置
+        //SQLiteToExcel sqliteToExcel = new SQLiteToExcel(this, "helloworld.db", directory_path);
 
+        //导出指定数据库中的单个数据表
+        sqliteToExcel.exportSingleTable("nianhui", "nianhui.xls", new SQLiteToExcel.ExportListener() {
+            @Override
+            public void onStart() {
+            }
+            @Override
+            public void onCompleted(String filePath) {
+                Toast.makeText(context,"导出成功",Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(context,"导出失败",Toast.LENGTH_SHORT).show();
+                Log.i("zunex","Exception e："+e.toString());
+            }
+        });
+    }
+
+    /**
+     * 把Excel表导入数据库
+     */
+    public static void excelToDb(Context context){
+        //初始化
+        //ExcelToSQLite excelToSQLite = new ExcelToSQLite(getApplicationContext(), "helloworld.db");
+        //如果你要先删除表，再导入Excel，使用以下声明方法
+        ExcelToSQLite excelToSQLite = new ExcelToSQLite(context, "nianhui", true);
+
+        //从文件夹中导入-填入绝对路径
+        excelToSQLite.importFromFile(Root + "/nianhui.xls", new ExcelToSQLite.ImportListener() {
+            @Override
+            public void onStart() {
+                //下面的onCompleted()方法没有起作用，故在这里加提示
+                Toast.makeText(context,"导入成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCompleted(String dbName) {
+                //不知为何，导入成功却没有调用该方法
+                //Toast.makeText(BaseActivity.this,"导入成功",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(context,"导入失败",Toast.LENGTH_SHORT).show();
+                Log.i("zunex","Exception e："+e.toString());
+            }
+        });
+    }
 }
