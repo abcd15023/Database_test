@@ -54,7 +54,7 @@ public class PopMain extends PopupWindow {
             public void onClick(View v) {
                 Intent intent = new Intent(context,AddActivity.class);
                 context.startActivity(intent);  //因为本类不是Activity类，这里需要引用context调用Activity类的方法
-                Toast.makeText(context,"新增商品",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,"新增商品",Toast.LENGTH_SHORT).show();
                 PopMain.this.dismiss(); //点击完菜单消失
             }
         });

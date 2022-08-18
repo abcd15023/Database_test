@@ -58,8 +58,8 @@ public class Utils {
     //获得数据库id列的最大值，用于新增数据时设置非自增非主键的id为最大值+1
     public static int getdbMaxId(){
         Cursor cursor;
-        //sql = "select max(id) from nianhui";
-        sql = "SELECT MAX(id) AS idd FROM nianhui";
+        //sql = "SELECT MAX(id) AS idd FROM nianhui"; 有bug，Max()函数最大到999
+        sql = "SELECT MAX(id) AS idd FROM (select CAST(id AS BIGINT) id from nianhui)";
         //创建游标对象
         cursor = db.rawQuery(sql, null);
         while(cursor.moveToNext()){
