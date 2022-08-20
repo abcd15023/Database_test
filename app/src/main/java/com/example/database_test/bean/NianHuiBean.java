@@ -1,6 +1,6 @@
-package com.example.database_test;
+package com.example.database_test.bean;
 
-public class nianhui_info {
+public class NianHuiBean {
     private int id;
     private String remark;
     private String name;
@@ -11,10 +11,10 @@ public class nianhui_info {
     private String time;
     private String supplier;
 
-    public nianhui_info() {
+    public NianHuiBean() {
     }
 
-    public nianhui_info(int id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier) {
+    public NianHuiBean(int id, String remark, String name, String size, String sizePlus, String sellingPrice, String purchasingPrice, String time, String supplier) {
         this.id = id;
         this.remark = remark;
         this.name = name;

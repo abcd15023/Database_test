@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.database_test;
+package com.example.database_test.adapter;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.database_test.BaseAdapter;
+import com.example.database_test.R;
+import com.example.database_test.bean.NianHuiBean;
+import com.example.database_test.utils.Utils;
 
 import java.util.List;
 
@@ -34,14 +37,14 @@ import java.util.List;
  */
 public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
 
-    private List<nianhui_info> mDataList;
+    private List<NianHuiBean> mDataList;
 
     public MainAdapter(Context context) {
         super(context);
     }
 
-    public void notifyDataSetChanged(List<nianhui_info> dataList) {
-
+    //靠notifyDataSetChanged()方法给mDataList传值，更新Adapter
+    public void notifyDataSetChanged(List<NianHuiBean> dataList) {
         this.mDataList = dataList;
         super.notifyDataSetChanged();
     }
@@ -55,7 +58,7 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.item3,parent,false);
+                inflate(R.layout.item,parent,false);
         ViewHolder holder = new ViewHolder(view);
 
         //RecyclerView下的 行布局控件 都可以单独做点击事件
@@ -84,7 +87,6 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
 //            }
 //        });
 
-        //return new ViewHolder(getInflater().inflate(R.layout.item1, parent, false));
         return holder;
     }
 
@@ -92,31 +94,31 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //holder.setData(mDataList.get(position));
 
-        nianhui_info nh = mDataList.get(position);
+        NianHuiBean nh = mDataList.get(position);
         Log.i("zun","1");
         String str = String.valueOf(nh.getId());
         //holder.text_id.setText(str);
-        holder.text_remark.setText(nh.getRemark());
-        holder.text_name.setText(nh.getName());
-        holder.text_name.setVisibility(View.VISIBLE);
-        holder.text_size.setText(nh.getSize());
-        holder.text_size.setVisibility(View.VISIBLE);
-        holder.text_sizePlus.setText(nh.getSizePlus());
+        holder.remarkTv.setText(nh.getRemark());
+        holder.nameTv.setText(nh.getName());
+        holder.nameTv.setVisibility(View.VISIBLE);
+        holder.sizeTv.setText(nh.getSize());
+        holder.sizeTv.setVisibility(View.VISIBLE);
+        holder.sizePlusTv.setText(nh.getSizePlus());
         Log.i("zunq","text_name："+nh.getName()+",text_size："+nh.getSize()+",text_sizePlus："+nh.getSizePlus());
 
-        holder.text_sellingPrice.setText(nh.getSellingPrice());
-        holder.text_purchasingPrice.setText(nh.getPurchasingPrice());
-        holder.text_time.setText(nh.getTime());
-        holder.text_supplier.setText(nh.getSupplier());
+        holder.sellingPriceTv.setText(nh.getSellingPrice());
+        holder.purchasingPriceTv.setText(nh.getPurchasingPrice());
+        holder.timeTv.setText(nh.getTime());
+        holder.supplierTv.setText(nh.getSupplier());
 
         if(!nh.getRemark().isEmpty()){
-            holder.text_remark.setVisibility(View.VISIBLE);
+            holder.remarkTv.setVisibility(View.VISIBLE);
         }
         if(!nh.getSize().trim().isEmpty()){
-            holder.text_size.setVisibility(View.VISIBLE);
+            holder.sizeTv.setVisibility(View.VISIBLE);
         }
         if(!nh.getSizePlus().trim().isEmpty()){
-            holder.text_sizePlus.setVisibility(View.VISIBLE);
+            holder.sizePlusTv.setVisibility(View.VISIBLE);
         }
     }
 
@@ -128,36 +130,32 @@ public class MainAdapter extends BaseAdapter<MainAdapter.ViewHolder> {
 //            super(itemView);
 //            tvTitle = itemView.findViewById(R.id.tv_title);
 //        }
-        TextView text_id,text_remark,text_name,text_size,text_sizePlus,text_sellingPrice,text_purchasingPrice,text_time,text_supplier;
+        TextView idTv,remarkTv,nameTv,sizeTv,sizePlusTv,sellingPriceTv,purchasingPriceTv,timeTv,supplierTv;
 
         //构造函数传入View参数，
         public ViewHolder(View view){
             super(view);
 
-            text_remark = view.findViewById(R.id.item_remark);
-            text_name = view.findViewById(R.id.item_name);
-            text_size = view.findViewById(R.id.item_size);
-            text_sizePlus = view.findViewById(R.id.item_sizePlus);
-            text_sellingPrice = view.findViewById(R.id.item_sellingPrice);
-            text_purchasingPrice = view.findViewById(R.id.item_purchasingPrice);
-            text_time = view.findViewById(R.id.item_time);
-            text_supplier = view.findViewById(R.id.item_supplier);
+            remarkTv = view.findViewById(R.id.remark_tv);
+            nameTv = view.findViewById(R.id.name_tv);
+            sizeTv = view.findViewById(R.id.size_tv);
+            sizePlusTv = view.findViewById(R.id.sizePlus_tv);
+            sellingPriceTv = view.findViewById(R.id.sellingPrice_tv);
+            purchasingPriceTv = view.findViewById(R.id.purchasingPrice_tv);
+            timeTv = view.findViewById(R.id.time_tv);
+            supplierTv = view.findViewById(R.id.supplier_tv);
         }
 
         public void setData(String title) {
-            this.text_id.setText(title);
-            this.text_remark.setText(title);
-            this.text_name.setText(title);
-            this.text_size.setText(title);
-            this.text_sizePlus.setText(title);
-            this.text_sellingPrice.setText(title);
-            this.text_purchasingPrice.setText(title);
-            this.text_time.setText(title);
-            this.text_supplier.setText(title);
+            this.idTv.setText(title);
+            this.remarkTv.setText(title);
+            this.nameTv.setText(title);
+            this.sizeTv.setText(title);
+            this.sizePlusTv.setText(title);
+            this.sellingPriceTv.setText(title);
+            this.purchasingPriceTv.setText(title);
+            this.timeTv.setText(title);
+            this.supplierTv.setText(title);
         }
     }
-    public void clearList(){
-        mDataList.clear();
-    }
-
 }

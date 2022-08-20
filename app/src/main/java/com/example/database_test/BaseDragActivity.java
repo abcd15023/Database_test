@@ -21,12 +21,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.database_test.ui.EditActivity;
+import com.example.database_test.utils.Utils;
 import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
 import com.yanzhenjie.recyclerview.SwipeMenu;
 import com.yanzhenjie.recyclerview.SwipeMenuBridge;
@@ -37,7 +38,6 @@ import com.yanzhenjie.recyclerview.touch.OnItemMoveListener;
 import com.yanzhenjie.recyclerview.touch.OnItemStateChangedListener;
 
 import java.util.Collections;
-import java.util.List;
 
 /**
  * <p>
@@ -80,9 +80,9 @@ public abstract class BaseDragActivity extends BaseActivity {
             } else if (actionState == OnItemStateChangedListener.ACTION_STATE_IDLE) {
                 //mActionBar.setSubtitle("状态：手指松开");
 
-                delDragList(); //先删除当前搜索结果下的mDataList对应数据库的数据
-                DragChangeDb(); //只在拖动松手后调用，把排好序的mDataList插入数据库
-                Log.i("zunxxx","BaseDragActivity："+mDataList);
+                Utils.delDragList(); //先删除当前搜索结果下的mDataList对应数据库的数据
+                Utils.DragChangeDb(); //只在拖动松手后调用，把排好序的mDataList插入数据库
+                Log.i("zunxxx","BaseDragActivity："+Utils.mDataList);
 
                 // 在手松开的时候还原背景。
                 ViewCompat.setBackground(viewHolder.itemView,
@@ -156,19 +156,18 @@ public abstract class BaseDragActivity extends BaseActivity {
             if (direction == SwipeRecyclerView.RIGHT_DIRECTION) {
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
                 if (menuPosition == 0){
-                    mDataList = Utils.getmDataList(); //每次滑动菜单修改传值前先更新mDatalist
                     Intent intent = new Intent();
-                    intent.setClass(BaseDragActivity.this,EditActivity.class);
-                    int id = mDataList.get(position).getId();
+                    intent.setClass(BaseDragActivity.this, EditActivity.class);
+                    int id = Utils.mDataList.get(position).getId();
                     String id2 = String.valueOf(id);
-                    String remark = String.valueOf(mDataList.get(position).getRemark());//通过Position得到item在数据库的元素
-                    String name = String.valueOf(mDataList.get(position).getName());
-                    String size = String.valueOf(mDataList.get(position).getSize());
-                    String sizePlus = String.valueOf(mDataList.get(position).getSizePlus());
-                    String sellingPrice = String.valueOf(mDataList.get(position).getSellingPrice());
-                    String purchasingPrice = String.valueOf(mDataList.get(position).getPurchasingPrice());
-                    String time = String.valueOf(mDataList.get(position).getTime());
-                    String supplier = String.valueOf(mDataList.get(position).getSupplier());
+                    String remark = String.valueOf(Utils.mDataList.get(position).getRemark());//通过Position得到item在数据库的元素
+                    String name = String.valueOf(Utils.mDataList.get(position).getName());
+                    String size = String.valueOf(Utils.mDataList.get(position).getSize());
+                    String sizePlus = String.valueOf(Utils.mDataList.get(position).getSizePlus());
+                    String sellingPrice = String.valueOf(Utils.mDataList.get(position).getSellingPrice());
+                    String purchasingPrice = String.valueOf(Utils.mDataList.get(position).getPurchasingPrice());
+                    String time = String.valueOf(Utils.mDataList.get(position).getTime());
+                    String supplier = String.valueOf(Utils.mDataList.get(position).getSupplier());
                     intent.putExtra("id",id2);
                     intent.putExtra("remark",remark);
                     intent.putExtra("name",name);
@@ -181,35 +180,22 @@ public abstract class BaseDragActivity extends BaseActivity {
                     startActivity(intent);
                 }else{
                     Utils.dbDelItem(position);
-                    if(BaseActivity.s1){
-                        //Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
-                        Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
-                    }else if(BaseActivity.s2){
-                        //Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
-                        Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
-                    }
+                    Utils.dbETSearch(Utils.mTempSql); //返回到上一界面后再调用一次搜索刷新list
                 }
             }
             //左边菜单的按钮事件
             else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
-                dbCopyItem(position);
-                if(BaseActivity.s1){
-                    //Toast.makeText(BaseDragActivity.this, "fast down为true", Toast.LENGTH_SHORT).show();
-                    Utils.dbETSearch(BaseActivity.tempSql); //返回到上一界面后再调用一次搜索刷新list
-                }else if(BaseActivity.s2){
-                    //Toast.makeText(BaseDragActivity.this, "global down为false", Toast.LENGTH_SHORT).show();
-                    Utils.dbETSearch(BaseActivity.tempSql2); //返回到上一界面后再调用一次搜索刷新list
-                }
-                mDataList = Utils.getmDataList();
+                Utils.dbCopyItem(position);
+                Utils.dbETSearch(Utils.mTempSql); //返回到上一界面后再调用一次搜索刷新list
+
                 //复制项先是插在底部，位置是mDataList.size()-1，为了使其插在被复制项的下一行 position+1 ，等于是照搬拖拽排序的方法
-                Collections.swap(mDataList, mDataList.size()-1, position+1);
-                mAdapter.notifyItemMoved(mDataList.size()-1, position+1);
-                delDragList();  //删除老表
-                DragChangeDb(); //插入新表
+                Collections.swap(Utils.mDataList, Utils.mDataList.size()-1, position+1);
+                mAdapter.notifyItemMoved(Utils.mDataList.size()-1, position+1);
+                Utils.delDragList();  //删除老表
+                Utils.DragChangeDb(); //插入新表
 
                 //Toast.makeText(BaseDragActivity.this, "list第" + position + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-                Log.i("zunxxx","复制按钮点击事件："+mDataList);
-
+                Log.i("zunxxx","复制按钮点击事件："+Utils.mDataList);
            }
         }
     };

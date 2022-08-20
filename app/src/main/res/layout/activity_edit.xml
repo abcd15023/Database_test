@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditActivity"
+    tools:context=".ui.EditActivity"
     android:orientation="vertical"
-    android:background="@drawable/bb1">
+    android:background="@drawable/bg_blue">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="@drawable/b6">
+        android:background="@drawable/btn_blue">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,39 +29,39 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <EditText
-            android:id="@+id/ETUpdateRemark"
+            android:id="@+id/edit_remark_et"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="备注"
             android:layout_marginBottom="10dp"/>
         <EditText
-            android:id="@+id/ETUpdateName"
+            android:id="@+id/edit_name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="名称"
             android:layout_marginBottom="10dp"/>
         <EditText
-            android:id="@+id/ETUpdateSize"
+            android:id="@+id/edit_size_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="规格"
             android:layout_marginBottom="10dp"/>
         <EditText
-            android:id="@+id/ETUpdateSizePlus"
+            android:id="@+id/edit_size_plus_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="子规格"
             android:layout_marginBottom="10dp"/>
         <EditText
-            android:id="@+id/ETUpdateSellingPrice"
+            android:id="@+id/edit_selling_price_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="售价"
             android:layout_marginBottom="10dp"/>
 
         <EditText
-            android:id="@+id/ETUpdatePurchasingPrice"
+            android:id="@+id/edit_purchasing_price_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="进价"
@@ -72,26 +72,26 @@
             android:orientation="horizontal"
             android:layout_marginBottom="10dp">
         <EditText
-            android:id="@+id/ETUpdateTime"
+            android:id="@+id/edit_time_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="时间"
             android:layout_weight="1"/>
             <Button
-                android:id="@+id/btn_getTime"
+                android:id="@+id/getTime_btn"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="获取最新时间"
                 android:theme="@style/BlueButtonStyle"/>
         </LinearLayout>
         <EditText
-            android:id="@+id/ETUpdateSupplier"
+            android:id="@+id/edit_supplier_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="供应商"
             android:layout_marginBottom="10dp"/>
         <Button
-            android:id="@+id/btnUpdate"
+            android:id="@+id/edit_btn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="修改"

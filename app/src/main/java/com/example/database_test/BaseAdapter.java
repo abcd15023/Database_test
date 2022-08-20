@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.database_test.bean.NianHuiBean;
+
 import java.util.List;
 
 /**
@@ -37,6 +39,6 @@ public abstract class BaseAdapter<VH extends RecyclerView.ViewHolder> extends Re
         return mInflater;
     }
 
-    public abstract void notifyDataSetChanged(List<nianhui_info> dataList);
+    public abstract void notifyDataSetChanged(List<NianHuiBean> dataList);
 
 }

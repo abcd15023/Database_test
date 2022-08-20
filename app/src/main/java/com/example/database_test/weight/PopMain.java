@@ -1,4 +1,4 @@
-package com.example.database_test;
+package com.example.database_test.weight;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,13 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import com.example.database_test.R;
+import com.example.database_test.ui.AddActivity;
+import com.example.database_test.utils.Utils;
 
 //下拉式菜单
 public class PopMain extends PopupWindow {
-    private View conentView;  //声明一个视图
 
-    RelativeLayout re_layout1,re_layout2,re_layout3;  //声明菜单项，且为相对布局
+    private View conentView;  //声明一个视图
+    private RelativeLayout mAddRelativeLayout,mImportRelativeLayout,mExportRelativeLayout;  //声明菜单项，且为相对布局
+
     //构造器，带上下文参数。负责初始化和传入Activity参数
     public PopMain(final Activity context){
         //反射器
@@ -45,20 +49,20 @@ public class PopMain extends PopupWindow {
        //this.setAnimationStyle(R.style.);
 
         //实例化菜单项
-        re_layout1 = (RelativeLayout) conentView.findViewById(R.id.re_layout1);
-        re_layout2 = (RelativeLayout) conentView.findViewById(R.id.re_layout2);
-        re_layout3 = (RelativeLayout) conentView.findViewById(R.id.re_layout3);
+        mAddRelativeLayout = (RelativeLayout) conentView.findViewById(R.id.add_relative_layout);
+        mImportRelativeLayout = (RelativeLayout) conentView.findViewById(R.id.import_relative_layout);
+        mExportRelativeLayout = (RelativeLayout) conentView.findViewById(R.id.export_relative_layout);
         //设置菜单项的监听
-        re_layout1.setOnClickListener(new View.OnClickListener() {
+        mAddRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,AddActivity.class);
+                Intent intent = new Intent(context, AddActivity.class);
                 context.startActivity(intent);  //因为本类不是Activity类，这里需要引用context调用Activity类的方法
                 //Toast.makeText(context,"新增商品",Toast.LENGTH_SHORT).show();
                 PopMain.this.dismiss(); //点击完菜单消失
             }
         });
-        re_layout2.setOnClickListener(new View.OnClickListener() {
+        mImportRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopMain.this.dismiss();
@@ -75,7 +79,7 @@ public class PopMain extends PopupWindow {
                         }).show();
             }
         });
-        re_layout3.setOnClickListener(new View.OnClickListener() {
+        mExportRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopMain.this.dismiss();

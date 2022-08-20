@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bb1"
+    android:background="@drawable/bg_blue"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".BaseActivity">
 
     <LinearLayout
-        android:id="@+id/L1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/etGlobalSearch"
+            android:id="@+id/global_search_et"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:hint="输入名称 / 规格"
@@ -23,16 +22,16 @@
             android:textSize="20sp"
             android:layout_weight="1"/>
         <ImageView
-            android:id="@+id/img_clear"
+            android:id="@+id/clear_iv"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/clear2"
+            android:src="@drawable/icon_clear"
             android:layout_marginRight="5dp"/>
         <ImageView
-            android:id="@+id/img_add"
+            android:id="@+id/add_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/add" />
+            android:src="@drawable/icon_add" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,7 +50,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 <LinearLayout
-    android:id="@+id/ll"
+    android:id="@+id/activity_main_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"

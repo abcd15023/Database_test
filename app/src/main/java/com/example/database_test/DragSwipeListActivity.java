@@ -18,12 +18,11 @@ package com.example.database_test;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.database_test.utils.Utils;
 import com.yanzhenjie.recyclerview.touch.OnItemMoveListener;
 
 import java.util.Collections;
@@ -71,10 +70,9 @@ public class DragSwipeListActivity extends BaseDragActivity {
                 // 真实的Position：通过ViewHolder拿到的position都需要减掉HeadView的数量。
                 int fromPosition = srcHolder.getAdapterPosition() - mRecyclerView.getHeaderCount();
                 int toPosition = targetHolder.getAdapterPosition() - mRecyclerView.getHeaderCount();
-                mDataList = Utils.getmDataList();
-                Collections.swap(mDataList, fromPosition, toPosition);
+                Collections.swap(Utils.mDataList, fromPosition, toPosition);
                 mAdapter.notifyItemMoved(fromPosition, toPosition);
-                Log.i("zunxxx","OnItemMoveListener()："+mDataList);
+                Log.i("zunxxx","OnItemMoveListener()："+Utils.mDataList);
 
                 //DragChangeDb();//拖动操作直接改变数据库，但是这里不能调用，因为拖拽每跨过一个item都会调用DragChangeDb()方法，造成重复错误插入数据
 
@@ -90,7 +88,7 @@ public class DragSwipeListActivity extends BaseDragActivity {
                     mRecyclerView.removeHeaderView(mHeaderView);
                     Toast.makeText(DragSwipeListActivity.this, "HeaderView被删除。", Toast.LENGTH_SHORT).show();
                 } else { // 普通Item。
-                    mDataList.remove(position);
+                    Utils.mDataList.remove(position);
                     mAdapter.notifyItemRemoved(position);
                     Toast.makeText(DragSwipeListActivity.this, "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
                 }
