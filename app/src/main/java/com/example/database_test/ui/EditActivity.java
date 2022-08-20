@@ -2,6 +2,7 @@ package com.example.database_test.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +12,7 @@ import com.example.database_test.BaseActivity;
 import com.example.database_test.R;
 import com.example.database_test.utils.Utils;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends Activity {
 
     private EditText mEditRemarkEt,mEditNameEt,mEditSizeEt,mEditSizePlusEt,mEditSellingPriceEt,mEditPurchasingPriceEt,mEditTimeEt,mEditSupplierEt;
     private Button mEditBtn,mGetTimeBtn;

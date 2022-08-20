@@ -16,6 +16,7 @@
 package com.example.database_test;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ import java.util.List;
 /**
  * Created by YanZhenjie on 2017/7/21.
  */
-public class BaseActivity extends AppCompatActivity implements OnItemClickListener {
+public class BaseActivity extends Activity implements OnItemClickListener {
 
     protected Toolbar mToolbar;
     protected ActionBar mActionBar;
