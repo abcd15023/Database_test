@@ -1,4 +1,4 @@
-package com.example.database_test.bean;
+package com.zun.database_test.bean;
 
 public class NianHuiBean {
     private int id;

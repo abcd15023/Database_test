@@ -1,6 +1,4 @@
-package com.example.database_test.ui;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.zun.database_test.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,9 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.database_test.BaseActivity;
 import com.example.database_test.R;
-import com.example.database_test.utils.Utils;
+import com.zun.database_test.utils.Utils;
 
 public class AddActivity extends Activity {
     private EditText mAddRemarkEt,mAddNameEt,mAddSizeEt,mAddSizePlusEt,mAddSellingPriceEt,mAddPurchasingPriceEt,mAddTimeEt,mAddSupplierEt;

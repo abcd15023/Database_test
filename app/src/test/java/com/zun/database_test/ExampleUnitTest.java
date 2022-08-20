@@ -1,4 +1,4 @@
-package com.example.database_test;
+package com.zun.database_test;
 
 import org.junit.Test;
 

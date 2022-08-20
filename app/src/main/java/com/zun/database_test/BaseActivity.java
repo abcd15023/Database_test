@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.database_test;
+package com.zun.database_test;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -30,23 +27,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.database_test.adapter.MainAdapter;
-import com.example.database_test.bean.NianHuiBean;
-import com.example.database_test.db.DatabaseHelper;
-import com.example.database_test.weight.PopMain;
-import com.example.database_test.utils.Utils;
+import com.example.database_test.R;
+import com.zun.database_test.adapter.MainAdapter;
+import com.zun.database_test.weight.PopMain;
+import com.zun.database_test.utils.Utils;
 import com.yanzhenjie.recyclerview.OnItemClickListener;
 import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 import com.yanzhenjie.recyclerview.widget.DefaultItemDecoration;
-
-import java.util.List;
 
 /**
  * Created by YanZhenjie on 2017/7/21.

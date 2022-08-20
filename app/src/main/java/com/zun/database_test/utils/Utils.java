@@ -1,4 +1,4 @@
-package com.example.database_test.utils;
+package com.zun.database_test.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import com.ajts.androidmads.library.ExcelToSQLite;
 import com.ajts.androidmads.library.SQLiteToExcel;
-import com.example.database_test.BaseAdapter;
-import com.example.database_test.bean.NianHuiBean;
-import com.example.database_test.db.DatabaseHelper;
+import com.zun.database_test.BaseAdapter;
+import com.zun.database_test.bean.NianHuiBean;
+import com.zun.database_test.db.DatabaseHelper;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

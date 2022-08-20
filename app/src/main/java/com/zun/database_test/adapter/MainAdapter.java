@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.database_test.adapter;
+package com.zun.database_test.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -25,10 +25,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.database_test.BaseAdapter;
+import com.zun.database_test.BaseAdapter;
 import com.example.database_test.R;
-import com.example.database_test.bean.NianHuiBean;
-import com.example.database_test.utils.Utils;
+import com.zun.database_test.bean.NianHuiBean;
 
 import java.util.List;
 

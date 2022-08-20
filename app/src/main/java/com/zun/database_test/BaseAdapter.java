@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.database_test;
+package com.zun.database_test;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.database_test.bean.NianHuiBean;
+import com.zun.database_test.bean.NianHuiBean;
 
 import java.util.List;
 

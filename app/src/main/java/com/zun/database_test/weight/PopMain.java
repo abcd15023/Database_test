@@ -1,4 +1,4 @@
-package com.example.database_test.weight;
+package com.zun.database_test.weight;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,8 +12,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.example.database_test.R;
-import com.example.database_test.ui.AddActivity;
-import com.example.database_test.utils.Utils;
+import com.zun.database_test.ui.AddActivity;
+import com.zun.database_test.utils.Utils;
 
 //下拉式菜单
 public class PopMain extends PopupWindow {

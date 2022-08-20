@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.database_test;
+package com.zun.database_test;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,8 +26,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.database_test.ui.EditActivity;
-import com.example.database_test.utils.Utils;
+import com.example.database_test.R;
+import com.zun.database_test.ui.EditActivity;
+import com.zun.database_test.utils.Utils;
 import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
 import com.yanzhenjie.recyclerview.SwipeMenu;
 import com.yanzhenjie.recyclerview.SwipeMenuBridge;

@@ -13,13 +13,13 @@
         android:theme="@style/Theme.Database_test"
         android:requestLegacyExternalStorage="true">
         <activity
-            android:name=".ui.EditActivity"
+            android:name="com.zun.database_test.ui.EditActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.AddActivity"
+            android:name="com.zun.database_test.ui.AddActivity"
             android:exported="false" />
         <activity
-            android:name=".DragSwipeListActivity"
+            android:name="com.zun.database_test.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
