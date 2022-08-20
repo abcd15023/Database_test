@@ -13,6 +13,7 @@ import com.ajts.androidmads.library.SQLiteToExcel;
 import com.zun.database_test.BaseAdapter;
 import com.zun.database_test.bean.NianHuiBean;
 import com.zun.database_test.db.DatabaseHelper;
+import com.zun.database_test.hua.L;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -20,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-    public static SQLiteDatabase mDb;
+    public static SQLiteDatabase mDb;//IO,Input和Output
+
     public static List<NianHuiBean> mDataList;
     public static BaseAdapter mAdapter;
     public static String mTempSql; //用于滑动菜单删除时更新列表，需要这个全局变量
@@ -158,6 +160,7 @@ public class Utils {
         String[] arr = newText.trim().split("\\s+");
         if(arr.length == 1){ //只有1个关键字时
             String sql1 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'";
+            L.d(L.LEVEL_TEST,"get sql1 which is " + sql1);
             return sql1;
         }else{  //不止1个关键字时
             for (int i = 1; i < arr.length; i++) {
@@ -165,6 +168,7 @@ public class Utils {
                 and = getAnd(arr[i].trim()); //arr从索引1开始
             }
             String sql2 = "SELECT * FROM nianhui WHERE (name||''||size||''||sizePlus) like '%"+arr[0]+"%'"+and;
+            L.d(L.LEVEL_TEST,"get sql2 which is " + sql2);
             return sql2;
         }
     }

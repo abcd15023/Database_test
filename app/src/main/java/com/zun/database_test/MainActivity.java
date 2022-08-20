@@ -35,7 +35,7 @@ import java.util.Collections;
  */
 public class MainActivity extends BaseDragActivity {
 
-    private View mHeaderView;
+    //private View mHeaderView;///原框架相关功能代码，暂存
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +100,10 @@ public class MainActivity extends BaseDragActivity {
                 if (mRecyclerView.getHeaderCount() > 0 && adapterPosition == 0) {
                     //判断是否有HeaderView && 是否为第一项
                     //有HeaderView且，当前删除的是第一个
-                    mRecyclerView.removeHeaderView(mHeaderView);
-                    Toast.makeText(MainActivity.this, "HeaderView被删除。", Toast.LENGTH_SHORT).show();
+
+                    //没有HeaderView，注释该代码
+                    //mRecyclerView.removeHeaderView(mHeaderView);
+                    //Toast.makeText(MainActivity.this, "HeaderView被删除。", Toast.LENGTH_SHORT).show();
 
                 } else {
                     //普通Item
