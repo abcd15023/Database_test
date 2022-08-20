@@ -1,4 +1,4 @@
-package com.ajts.androidmads.library;
+package com.zun.database_test.utils;
 
 import android.content.Context;
 import android.database.Cursor;

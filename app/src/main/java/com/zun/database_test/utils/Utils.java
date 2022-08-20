@@ -8,8 +8,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.ajts.androidmads.library.ExcelToSQLite;
-import com.ajts.androidmads.library.SQLiteToExcel;
 import com.zun.database_test.BaseAdapter;
 import com.zun.database_test.bean.NianHuiBean;
 import com.zun.database_test.db.DatabaseHelper;
