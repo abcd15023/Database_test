@@ -83,26 +83,37 @@ public class SQLiteToExcel {
         return tables;
     }
 
-    private ArrayList<String> getColumns(String table) {
-        ArrayList<String> columns = new ArrayList<>();
+    //获取查看指定表所有字段信息
+    private ArrayList<String> getTitleNameList(String table) {
+        ArrayList<String> titleNameList = new ArrayList<>();
         Cursor cursor = database.rawQuery("PRAGMA table_info(" + table + ")", null);
         while (cursor.moveToNext()) {
-            columns.add(cursor.getString(1));
+            titleNameList.add(cursor.getString(1));
         }
         cursor.close();
-        return columns;
+        return titleNameList;
     }
 
-    private void exportTables(List<String> tables, final String fileName) throws Exception {
+    private void exportTables(List<String> tableNameList, final String fileName) throws Exception {
+        //读excel时候，是根据Excel文件生成好了HSSFWorkbook对象，然后直接从HSSFWorkbook对象拿数据
+        //写excel时候，先生成HSSFWorkbook对象，向HSSFWorkbook对象填充数据，然后写入文件
+        //拿到workbook对象
         workbook = new HSSFWorkbook();
-        for (int i = 0; i < tables.size(); i++) {
-            if (!tables.get(i).equals("android_metadata")) {
-                HSSFSheet sheet = workbook.createSheet(prettyNameMapping(tables.get(i)));
-                createSheet(tables.get(i), sheet);
+        for (int i = 0; i < tableNameList.size(); i++) {
+
+            if (!tableNameList.get(i).equals("android_metadata")) {
+                //做合法性判断，排除android_metadata
+                HSSFSheet sheet = workbook.createSheet(prettyNameMapping(tableNameList.get(i)));
+
+                //最终需要填充的是cell
+                createSheet(tableNameList.get(i), sheet);
             }
+
         }
+
+        //将HSSFWorkbook对象写入文件中
         File file = new File(mExportPath, fileName);
-        FileOutputStream fos = new FileOutputStream(file);
+        FileOutputStream fos = new FileOutputStream(file);//文件output流，文件流
         workbook.write(fos);
         fos.flush();
         fos.close();
@@ -110,22 +121,28 @@ public class SQLiteToExcel {
         database.close();
     }
 
-    public void exportSingleTable(final String table, final String fileName, ExportListener listener) {
-        List<String> tables = new ArrayList<>();
-        tables.add(table);
-        startExportTables(tables, fileName, listener);
+    //单个表
+    public void exportSingleTable(final String tableName, final String fileName, ExportListener listener) {
+        List<String> tableNameList = new ArrayList<>();
+        tableNameList.add(tableName);
+        startExportTables(tableNameList, fileName, listener);
     }
 
-    public void exportSpecificTables(final List<String> tables, String fileName, ExportListener listener) {
-        startExportTables(tables, fileName, listener);
+    //指明特定的几个表，就所有表有A/B/C/D，现在只需要B和D
+    //List<String> tableNameList = new ArrayList<>();
+    //tableNameList.add(tableB);
+    //tableNameList.add(tableD);
+    public void exportSpecificTables(final List<String> tableNameList, String fileName, ExportListener listener) {
+        startExportTables(tableNameList, fileName, listener);
     }
 
+    //所有表
     public void exportAllTables(final String fileName, ExportListener listener) {
-        ArrayList<String> tables = getAllTables();
-        startExportTables(tables, fileName, listener);
+        ArrayList<String> tableNameList = getAllTables();
+        startExportTables(tableNameList, fileName, listener);
     }
 
-    private void startExportTables(final List<String> tables, final String fileName, final ExportListener listener) {
+    private void startExportTables(final List<String> tableNameList, final String fileName, final ExportListener listener) {
         if (listener != null) {
             listener.onStart();
         }
@@ -134,7 +151,9 @@ public class SQLiteToExcel {
             @Override
             public void run() {
                 try {
-                    exportTables(tables, fileName);
+                    exportTables(tableNameList, fileName);
+
+
                     if (listener != null) {
                         handler.post(new Runnable() {
                             @Override
@@ -159,48 +178,71 @@ public class SQLiteToExcel {
         }).start();
     }
 
-    private void createSheet(String table, HSSFSheet sheet) {
-        HSSFRow rowA = sheet.createRow(0);
-        ArrayList<String> columns = getColumns(table);
+    private void createSheet(String tableName, HSSFSheet sheet) {
+        //sheet-->titleRow-->titleCell，不用重新赋值，拿到的是句柄，所以最后直接传sheet即可
+        HSSFRow titleRow = sheet.createRow(0);
+        ArrayList<String> titleNameList = getTitleNameList(tableName);
         int cellIndex = 0;
-        for (int i = 0; i < columns.size(); i++) {
-            String columnName = prettyNameMapping("" + columns.get(i));
-            if (!excludeColumn(columnName)) {
-                HSSFCell cellA = rowA.createCell(cellIndex);
-                cellA.setCellValue(new HSSFRichTextString(columnName));
+        for (int i = 0; i < titleNameList.size(); i++) {
+
+            //从mPrettyNameMapping的HashMap中取到values
+            String valueStr = prettyNameMapping("" + titleNameList.get(i));
+
+            if (!excludeColumn(valueStr)) {
+                //如果不存在，则创建单元格cell，并附上cellIndex（列所在位置）
+                HSSFCell titleCell = titleRow.createCell(cellIndex);
+                //生成String类型的数据放入cell中
+                titleCell.setCellValue(new HSSFRichTextString(valueStr));
+                //列数加1
                 cellIndex++;
             }
         }
-        insertItemToSheet(table, sheet, columns);
+
+        //将数据插入HSSFSheet
+        insertItemToSheet(tableName, sheet, titleNameList);
     }
 
-    private void insertItemToSheet(String table, HSSFSheet sheet, ArrayList<String> columns) {
+    private void insertItemToSheet(String tableName, HSSFSheet sheet, ArrayList<String> titleNameList) {
         HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
-        Cursor cursor = database.rawQuery("select * from " + table, null);
+
+        //获取该表的所有数据
+        Cursor cursor = database.rawQuery("select * from " + tableName, null);
         cursor.moveToFirst();
-        int n = 1;
-        while (!cursor.isAfterLast()) {
-            HSSFRow rowA = sheet.createRow(n);
-            int cellIndex = 0;
-            for (int j = 0; j < columns.size(); j++) {
-                String columnName = "" + columns.get(j);
-                if (!excludeColumn(columnName)) {
-                    HSSFCell cellA = rowA.createCell(cellIndex);
-                    if (cursor.getType(j) == Cursor.FIELD_TYPE_BLOB) {
-                        HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, (short) cellIndex, n, (short) (cellIndex + 1), n + 1);
+        int targetRowIndex = 1;//行数，或行的位置
+        while (!cursor.isAfterLast()) {//如果不是最后一个之后的，就继续循环
+
+            HSSFRow targetRow = sheet.createRow(targetRowIndex);
+            int cellIndex = 0;//列数，或列的位置
+
+            for (int index = 0; index < titleNameList.size(); index++) {
+
+                String titleName = "" + titleNameList.get(index);
+
+                if (!excludeColumn(titleName)) {
+                    //如果不包含该标题
+                    HSSFCell targetCell = targetRow.createCell(cellIndex);
+
+                    if (cursor.getType(index) == Cursor.FIELD_TYPE_BLOB) {
+                        //TODO 以后再说
+                        HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0,
+                                (short) cellIndex,
+                                targetRowIndex,
+                                (short) (cellIndex + 1),
+                                targetRowIndex + 1);
                         anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
-                        patriarch.createPicture(anchor, workbook.addPicture(cursor.getBlob(j), HSSFWorkbook.PICTURE_TYPE_JPEG));
+                        patriarch.createPicture(anchor, workbook.addPicture(cursor.getBlob(index), HSSFWorkbook.PICTURE_TYPE_JPEG));
+
                     } else {
-                        String value = cursor.getString(j);
+                        String value = cursor.getString(index);
                         if (null != mCustomFormatter) {
-                            value = mCustomFormatter.process(columnName, value);
+                            value = mCustomFormatter.process(titleName, value);
                         }
-                        cellA.setCellValue(new HSSFRichTextString(value));
+                        targetCell.setCellValue(new HSSFRichTextString(value));
                     }
                     cellIndex++;
                 }
             }
-            n++;
+            targetRowIndex++;
             cursor.moveToNext();
         }
         cursor.close();
