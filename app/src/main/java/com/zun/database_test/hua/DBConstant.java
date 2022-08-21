@@ -25,7 +25,4 @@ public class DBConstant {
             + GoodInfo.SUPPLIER + " varchar(100),"
             + GoodInfo.REMARK + " varchar(300),"
             + GoodInfo.EXTEND + " varchar(300))";
-
-
-
 }
